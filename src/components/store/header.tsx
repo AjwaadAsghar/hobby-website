@@ -26,9 +26,9 @@ export async function Header() {
         <div className="container-store flex min-h-10 flex-wrap items-center justify-between gap-x-6 gap-y-1 py-1.5 text-sm">
           <p className="font-medium">
             {threshold > 0 ? (
-              <>Free delivery over {formatMoney(threshold, { currency: s.commerce.currency, locale: s.commerce.locale })}<span className="hidden sm:inline"> · Cash on delivery available</span></>
+              <>Free delivery over {formatMoney(threshold, { currency: s.commerce.currency, locale: s.commerce.locale })}<span className="hidden sm:inline"> · Competitive prices on every order</span></>
             ) : (
-              <>Cash on delivery available across the country</>
+              <>Fast delivery across Pakistan</>
             )}
           </p>
           <div className="flex items-center gap-4">

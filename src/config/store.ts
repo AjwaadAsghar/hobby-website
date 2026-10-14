@@ -184,7 +184,7 @@ export const storeDefaults: StoreSettings = {
     ],
     trustBadges: [
       { title: "Fast delivery", text: "2–4 working days across Pakistan" },
-      { title: "Cash on delivery", text: "Pay when your parcel arrives" },
+      { title: "Competitive prices", text: "Prices that beat the market" },
       { title: "Genuine products", text: "Original brands with warranty" },
       { title: "Real human help", text: "Chat with us on WhatsApp" },
     ],
