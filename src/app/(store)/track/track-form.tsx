@@ -80,7 +80,7 @@ export function TrackForm({ defaultNumber }: { defaultNumber: string }) {
       </form>
 
       {state.status === "found" && (
-        <section aria-live="polite" className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+        <section aria-live="polite" className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_1.2fr]">
           <div className="rounded-3xl border p-6">
             <OrderProgress order={state.order} />
             {state.order.paymentMethod !== "cod" && ["AWAITING_PAYMENT", "REJECTED"].includes(state.order.paymentStatus) && (

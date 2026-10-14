@@ -89,7 +89,7 @@ export async function ProductListing({
         <h1 className="text-4xl font-bold sm:text-5xl">{title}</h1>
         {description && <p className="mt-3 max-w-3xl text-lg text-muted-foreground">{description}</p>}
       </div>
-      <div className="grid gap-8 lg:grid-cols-[260px_1fr] xl:gap-12">
+      <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)] xl:gap-12">
         <ListingFilters
           basePath={basePath}
           activeCount={activeCount}

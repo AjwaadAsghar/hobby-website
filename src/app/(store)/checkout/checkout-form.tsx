@@ -232,7 +232,7 @@ export function CheckoutForm({
   return (
     <div className="container-store py-10">
       <CheckoutSteps current={step === "details" ? 2 : 3} />
-      <div className="grid gap-10 lg:grid-cols-[1fr_420px]">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div>
           {formError && (
             <div role="alert" className="mb-6 rounded-2xl border-2 border-destructive/40 bg-destructive/5 p-5">

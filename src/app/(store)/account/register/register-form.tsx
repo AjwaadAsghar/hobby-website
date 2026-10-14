@@ -39,6 +39,8 @@ export function RegisterForm({ next }: { next?: string }) {
             name={f.name}
             type={f.type}
             autoComplete={f.auto}
+            defaultValue={f.type === "password" ? undefined : (state.values?.[f.name] ?? "")}
+            key={f.type === "password" ? undefined : `${f.name}-${state.values?.[f.name] ?? ""}`}
             aria-invalid={!!fe[f.name]}
             aria-describedby={[f.hint && `r-${f.name}-hint`, fe[f.name] && `r-${f.name}-err`].filter(Boolean).join(" ") || undefined}
             className={cn("h-13 w-full rounded-xl border-2 bg-background px-4 text-base", fe[f.name] ? "border-destructive" : "border-input")}

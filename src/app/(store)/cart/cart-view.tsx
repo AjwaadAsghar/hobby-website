@@ -33,7 +33,7 @@ export function CartView() {
           </Link>
         </div>
       ) : (
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_400px]">
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px]">
           <div>
             {(quote?.problems.length ?? 0) > 0 && (
               <div role="alert" className="mb-6 rounded-2xl border-2 border-warning/50 bg-warning/10 p-4">

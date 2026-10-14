@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
         </div>
       </div>
 
-      <div className="mt-16 grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+      <div className="mt-16 grid gap-12 lg:grid-cols-[1.4fr_minmax(0,1fr)]">
         <section aria-labelledby="desc-heading">
           <h2 id="desc-heading" className="text-2xl font-bold sm:text-3xl">
             Description

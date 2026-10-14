@@ -9,7 +9,7 @@ import { signIn, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
-export type FormState = { error?: string; fieldErrors?: Record<string, string>; ok?: boolean };
+export type FormState = { error?: string; fieldErrors?: Record<string, string>; ok?: boolean; values?: Record<string, string> };
 
 function safeNext(next: unknown, fallback: string) {
   const n = typeof next === "string" ? next : "";
@@ -23,11 +23,12 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   const fieldErrors: Record<string, string> = {};
   if (!z.string().email().safeParse(email).success) fieldErrors.email = "Please enter your email address, for example name@example.com.";
   if (!password) fieldErrors.password = "Please enter your password.";
-  if (Object.keys(fieldErrors).length) return { fieldErrors };
+  const values = { email };
+  if (Object.keys(fieldErrors).length) return { fieldErrors, values };
 
   const user = await db.user.findUnique({ where: { email }, select: { role: true } });
   if (area === "admin" && user && user.role === "CUSTOMER") {
-    return { error: "This account cannot open the admin area." };
+    return { error: "This account cannot open the admin area.", values };
   }
 
   try {
@@ -35,8 +36,8 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   } catch (err) {
     if (err instanceof AuthError) {
       const code = (err as AuthError & { code?: string }).code;
-      if (code === "rate_limited") return { error: "Too many sign-in attempts. Please wait 15 minutes and try again." };
-      return { error: "That email and password do not match. Please check and try again." };
+      if (code === "rate_limited") return { error: "Too many sign-in attempts. Please wait 15 minutes and try again.", values };
+      return { error: "That email and password do not match. Please check and try again.", values };
     }
     throw err;
   }
@@ -62,15 +63,17 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   if (!rateLimit(`register:${clientIp(await headers())}`, 5, 60 * 60_000).ok) {
     return { error: "Too many sign-ups from this connection. Please try again later." };
   }
-  const parsed = registerSchema.safeParse(Object.fromEntries(formData.entries()));
+  const raw = Object.fromEntries(formData.entries()) as Record<string, string>;
+  const values = { name: raw.name ?? "", email: raw.email ?? "", phone: raw.phone ?? "" };
+  const parsed = registerSchema.safeParse(raw);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const i of parsed.error.issues) fieldErrors[String(i.path[0])] ??= i.message;
-    return { fieldErrors };
+    return { fieldErrors, values };
   }
   const d = parsed.data;
   const exists = await db.user.findUnique({ where: { email: d.email } });
-  if (exists) return { fieldErrors: { email: "An account with this email already exists. Try signing in instead." } };
+  if (exists) return { fieldErrors: { email: "An account with this email already exists. Try signing in instead." }, values };
   await db.user.create({ data: { name: d.name, email: d.email, phone: d.phone || null, role: "CUSTOMER", passwordHash: await bcrypt.hash(d.password, 10) } });
   await signIn("credentials", { email: d.email, password: d.password, redirect: false });
   redirect(safeNext(formData.get("next"), "/account"));

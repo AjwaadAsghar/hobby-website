@@ -27,6 +27,8 @@ export function LoginForm({ area, next }: { area: "admin" | "account"; next?: st
           name="email"
           type="email"
           autoComplete="email"
+          defaultValue={state.values?.email ?? ""}
+          key={state.values?.email ?? "email"}
           required
           aria-invalid={!!fe.email}
           aria-describedby={fe.email ? `${area}-email-err` : undefined}
