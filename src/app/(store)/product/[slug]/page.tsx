@@ -93,16 +93,16 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
 
           <ul className="mt-8 grid gap-3 rounded-2xl border p-5 sm:grid-cols-2">
             <li className="flex items-center gap-3">
-              <Truck className="size-6 shrink-0 text-brand" aria-hidden /> Delivery in 2–4 working days
+              <Truck className="size-6 shrink-0 text-brand-text" aria-hidden /> Delivery in 2–4 working days
             </li>
             <li className="flex items-center gap-3">
-              <Banknote className="size-6 shrink-0 text-brand" aria-hidden /> Cash on delivery available
+              <Banknote className="size-6 shrink-0 text-brand-text" aria-hidden /> Cash on delivery available
             </li>
             <li className="flex items-center gap-3">
-              <ShieldCheck className="size-6 shrink-0 text-brand" aria-hidden /> 100% genuine product
+              <ShieldCheck className="size-6 shrink-0 text-brand-text" aria-hidden /> 100% genuine product
             </li>
             <li className="flex items-center gap-3">
-              <RotateCcw className="size-6 shrink-0 text-brand" aria-hidden /> 7-day easy returns
+              <RotateCcw className="size-6 shrink-0 text-brand-text" aria-hidden /> 7-day easy returns
             </li>
           </ul>
 

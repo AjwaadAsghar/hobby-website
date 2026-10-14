@@ -23,3 +23,17 @@ export function contrastRatio(a: string, b: string): number {
 export function readableOn(hex: string): string {
   return contrastRatio(hex, "#ffffff") >= contrastRatio(hex, "#18181b") ? "#ffffff" : "#18181b";
 }
+
+function mix(hex: string, target: string, t: number): string {
+  const a = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const b = [1, 3, 5].map((i) => parseInt(target.slice(i, i + 2), 16));
+  return "#" + a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, "0")).join("");
+}
+
+/** Nudges a colour toward black or white until it reaches the contrast ratio on `bg` (used for brand-coloured text). */
+export function ensureContrast(hex: string, bg: string, ratio = 4.5): string {
+  const toward = contrastRatio(bg, "#000000") > contrastRatio(bg, "#ffffff") ? "#000000" : "#ffffff";
+  let c = hex;
+  for (let i = 1; i <= 20 && contrastRatio(c, bg) < ratio; i++) c = mix(hex, toward, i * 0.05);
+  return c;
+}

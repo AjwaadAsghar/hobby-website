@@ -47,7 +47,7 @@ export async function Header() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
+      <header className="z-40 border-b bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 lg:sticky lg:top-0">
         <div className="container-store flex flex-wrap items-center gap-2 py-3 sm:gap-3 lg:flex-nowrap lg:gap-6">
           <MobileMenu categories={cats} />
           <Link href="/" className="shrink-0 rounded-lg" aria-label={`${s.branding.storeName} home page`}>

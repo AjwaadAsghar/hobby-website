@@ -55,3 +55,16 @@ Choices made while building the store without being able to ask. Each one is eas
 | 32 | **"Customers" groups guest orders by phone number**, since most customers check out without an account. Registered accounts, contact messages and newsletter subscribers have their own tabs. | Phone is the one detail every order has. |
 | 33 | **Newsletter sign-ups are stored and listed for copy and paste** into Mailchimp or Brevo. No email marketing tool is built in. | Sending marketing email needs a dedicated service and consent handling. |
 | 34 | **Shipping zones are matched by exact city name** (case-insensitive). Exactly one zone is the default for all other cities. The checkout city box suggests the known city names. | It's simple to manage and predictable for customers. |
+
+## SEO, accessibility & launch
+
+| # | Decision | Why |
+|---|----------|-----|
+| 35 | **Share images are generated on the fly** (`opengraph-image.tsx`, `src/lib/og.tsx`): one for the store, one per product with title, price and savings. | Links shared on WhatsApp and Facebook show a branded card that always matches current prices and settings, with no image editing. |
+| 36 | **Sitemap and robots.txt are built from the database.** Admin, account, cart, checkout, order, search and payment-proof URLs are excluded, and those pages are also marked `noindex`. | New products appear in Google without any manual step, and private pages stay out of search results. |
+| 37 | **The homepage publishes `OnlineStore` and `WebSite` structured data**, including a search action. Products publish `Product` data. | Google can show the store name, logo and a search box in results. |
+| 38 | **Brand-coloured text uses a separate `--brand-text` colour**, automatically darkened (or lightened in dark mode) until it reaches 4.5:1 contrast. Buttons and badges keep the exact brand colour. | Any accent colour the owner picks stays readable (WCAG AA). |
+| 39 | **The 3D hero starts only after the first interaction** (or after 3.5 idle seconds on desktop). Page transitions are pure CSS. | The first paint and Largest Contentful Paint are never delayed by WebGL or JavaScript animation, especially on budget phones. |
+| 40 | **The header is sticky only on large screens.** | On phones a sticky two-row header covers too much of the screen, especially with large text turned on. |
+| 41 | **`SEED_SAMPLE_ORDERS="false"` skips the 84 sample orders** when the first deploy seeds an empty database. Sample products and pages are still added. | Reports on a live store start at zero, while the owner still has example products to edit. |
+| 42 | **Each admin turns on push from the bell menu**, as well as from Integrations. | Staff can't open Integrations (owner only), but they still need alerts on their own phones. |

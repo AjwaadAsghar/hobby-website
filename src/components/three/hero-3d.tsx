@@ -67,18 +67,18 @@ export function Hero3D({ accent, modelUrl }: { accent: string; modelUrl?: string
 
   useEffect(() => {
     if (!canRun3D()) return;
-    // Wait until the browser is idle so 3D never competes with the first paint.
-    const w = window as Window & {
-      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
-      cancelIdleCallback?: (n: number) => void;
-    };
+    // The 3D scene never competes with the first paint: on touch devices it
+    // starts after the first interaction; on desktop after the first
+    // interaction or a few idle seconds, whichever comes first.
     const start = () => setEnabled(true);
-    if (w.requestIdleCallback && w.cancelIdleCallback) {
-      const id = w.requestIdleCallback(start, { timeout: 2000 });
-      return () => w.cancelIdleCallback?.(id);
-    }
-    const id = window.setTimeout(start, 800);
-    return () => clearTimeout(id);
+    const events = ["pointermove", "pointerdown", "touchstart", "scroll", "keydown", "wheel"] as const;
+    events.forEach((e) => window.addEventListener(e, start, { once: true, passive: true }));
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const timer = coarse ? undefined : window.setTimeout(start, 3500);
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, start));
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {

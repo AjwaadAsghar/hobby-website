@@ -4,7 +4,7 @@ import { SearchBar } from "@/components/store/search-bar";
 export function NotFoundContent() {
   return (
     <div className="container-store flex flex-col items-center py-20 text-center sm:py-28">
-      <p className="text-8xl font-black text-brand sm:text-9xl" aria-hidden>
+      <p className="text-8xl font-black text-brand-text sm:text-9xl" aria-hidden>
         404
       </p>
       <h1 className="mt-4 text-3xl font-bold sm:text-4xl">We could not find that page</h1>

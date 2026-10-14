@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { getSettings, siteUrl } from "@/lib/settings";
-import { readableOn, safeHex } from "@/lib/color";
+import { ensureContrast, readableOn, safeHex } from "@/lib/color";
 import "./globals.css";
 
 // Settings, prices and stock come from the database on every request.
@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: textSizeScript }} />
-        <style>{`:root{--brand:${brand};--brand-foreground:${readableOn(brand)}}`}</style>
+        <style>{`:root{--brand:${brand};--brand-foreground:${readableOn(brand)};--brand-text:${ensureContrast(brand, "#ffffff")}}.dark{--brand-text:${ensureContrast(brand, "#18181b")}}`}</style>
       </head>
       <body className="flex min-h-full flex-col">
         <Providers store={store}>{children}</Providers>

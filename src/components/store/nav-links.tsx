@@ -19,8 +19,8 @@ export function NavLinks({ categories }: { categories: { name: string; slug: str
                 href={it.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative inline-flex h-12 items-center px-2.5 text-[0.95rem] font-medium whitespace-nowrap transition-colors hover:text-brand",
-                  active && "font-semibold text-brand after:absolute after:inset-x-2.5 after:bottom-0 after:h-[3px] after:rounded-full after:bg-brand",
+                  "relative inline-flex h-12 items-center px-2.5 text-[0.95rem] font-medium whitespace-nowrap transition-colors hover:text-brand-text",
+                  active && "font-semibold text-brand-text after:absolute after:inset-x-2.5 after:bottom-0 after:h-[3px] after:rounded-full after:bg-brand",
                 )}
               >
                 {it.label}

@@ -135,7 +135,7 @@ export default async function OrderDetailPage({ params }: PageProps<"/admin/orde
               <a href={telLink(order.phone)} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-input font-semibold hover:bg-muted">
                 <Phone className="size-4" aria-hidden /> Call
               </a>
-              <a href={whatsappLink(normalizePhone(order.phone), waText)} target="_blank" rel="noopener noreferrer" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#128c4a] font-semibold text-white">
+              <a href={whatsappLink(normalizePhone(order.phone), waText)} target="_blank" rel="noopener noreferrer" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#0b7a3e] font-semibold text-white">
                 <MessageCircle className="size-4" aria-hidden /> WhatsApp
               </a>
             </div>

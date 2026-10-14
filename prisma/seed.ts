@@ -556,7 +556,8 @@ async function main() {
   const titles = Object.keys(productIds);
   const sold: Record<string, number> = {};
   let number = 10001;
-  const orderCount = 84;
+  // Set SEED_SAMPLE_ORDERS="false" for a live store: keeps sample products, skips fake orders.
+  const orderCount = process.env.SEED_SAMPLE_ORDERS === "false" ? 0 : 84;
   for (let i = 0; i < orderCount; i++) {
     const daysAgo = Math.floor(Math.pow(rand(), 1.4) * 90);
     const createdAt = new Date(Date.now() - daysAgo * 86400000 - Math.floor(rand() * 10) * 3600000);

@@ -63,7 +63,7 @@ export function ProductGallery({ images, title, modelUrl }: { images: Img[]; tit
             onPointerMove={onMove}
             onPointerLeave={() => setZoomOrigin(null)}
             onClick={() => setLightbox(true)}
-            aria-label="Open larger image"
+            aria-label={`Click to enlarge: ${current?.alt || title}`}
           >
             <ProductImage
               src={current?.url}

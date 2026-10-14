@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Banknote, Headset, ShieldCheck, Star, Truck } from "lucide-react";
-import { getSettings } from "@/lib/settings";
+import { getSettings, siteUrl } from "@/lib/settings";
 import { safeHex } from "@/lib/color";
 import { getActiveCategories, getBestSellers, getFeaturedProducts, getNewArrivals } from "@/server/catalog";
 import { Hero3D } from "@/components/three/hero-3d";
@@ -17,7 +18,7 @@ function SectionHeading({ eyebrow, title, href, linkLabel }: { eyebrow?: string;
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
-        {eyebrow && <p className="mb-2 font-semibold tracking-wide text-brand uppercase">{eyebrow}</p>}
+        {eyebrow && <p className="mb-2 font-semibold tracking-wide text-brand-text uppercase">{eyebrow}</p>}
         <h2 className="text-3xl font-bold sm:text-4xl">{title}</h2>
       </div>
       {href && (
@@ -27,6 +28,35 @@ function SectionHeading({ eyebrow, title, href, linkLabel }: { eyebrow?: string;
       )}
     </div>
   );
+}
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
+/** Organization + WebSite structured data (enables the sitelinks search box in Google). */
+function homeJsonLd(s: Awaited<ReturnType<typeof getSettings>>) {
+  const base = siteUrl();
+  const logo = s.branding.logoUrl || "/api/brand/icon?size=512";
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      name: s.branding.storeName,
+      description: s.branding.tagline,
+      url: base,
+      logo: logo.startsWith("http") ? logo : `${base}${logo}`,
+      email: s.contact.email || undefined,
+      telephone: s.contact.phone || undefined,
+      address: s.contact.address || undefined,
+      sameAs: Object.values(s.contact.social).filter(Boolean),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: s.branding.storeName,
+      url: base,
+      potentialAction: { "@type": "SearchAction", target: `${base}/search?q={search_term_string}`, "query-input": "required name=search_term_string" },
+    },
+  ];
 }
 
 export default async function HomePage() {
@@ -41,6 +71,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd(s)).replace(/</g, "\\u003c") }} />
       {/* Hero */}
       <section className="relative overflow-hidden border-b bg-gradient-to-b from-muted/60 to-background">
         <div className="container-store grid items-center gap-6 py-8 lg:grid-cols-2 lg:gap-8 lg:py-12">
@@ -74,7 +105,7 @@ export default async function HomePage() {
             const Icon = badgeIcons[i % badgeIcons.length];
             return (
               <li key={b.title} className="flex items-center gap-4">
-                <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+                <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand-text">
                   <Icon className="size-7" aria-hidden />
                 </span>
                 <span>
@@ -91,7 +122,7 @@ export default async function HomePage() {
       <section className="container-store py-16 sm:py-20" aria-labelledby="shop-by-category">
         <Reveal>
           <div className="mb-8">
-            <p className="mb-2 font-semibold tracking-wide text-brand uppercase">Browse</p>
+            <p className="mb-2 font-semibold tracking-wide text-brand-text uppercase">Browse</p>
             <h2 id="shop-by-category" className="text-3xl font-bold sm:text-4xl">
               Shop by category
             </h2>

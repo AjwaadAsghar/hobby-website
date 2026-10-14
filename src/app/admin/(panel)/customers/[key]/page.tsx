@@ -36,7 +36,7 @@ export default async function CustomerPage({ params }: PageProps<"/admin/custome
             <a href={telLink(latest.phone)} className="inline-flex h-11 items-center gap-2 rounded-xl border-2 border-input bg-background px-4 font-semibold hover:bg-muted">
               <Phone className="size-4" aria-hidden /> Call
             </a>
-            <a href={whatsappLink(key)} target="_blank" rel="noopener noreferrer" className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#128c4a] px-4 font-semibold text-white">
+            <a href={whatsappLink(key)} target="_blank" rel="noopener noreferrer" className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#0b7a3e] px-4 font-semibold text-white">
               <MessageCircle className="size-4" aria-hidden /> WhatsApp
             </a>
           </>

@@ -12,6 +12,7 @@
   --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-brand-text: var(--brand-text);
   --color-brand-soft: var(--brand-soft);
   --color-success: var(--success);
   --color-warning: var(--warning);
@@ -60,6 +61,7 @@
 :root {
   --brand: #d7261e;
   --brand-foreground: #ffffff;
+  --brand-text: #d7261e;
   --brand-soft: color-mix(in oklch, var(--brand) 10%, white);
   --success: #15803d;
   --warning: #b45309;
@@ -145,7 +147,7 @@ html[data-text-size="xl"] {
   html {
     @apply font-sans;
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 8rem;
+    scroll-padding-top: 1rem;
   }
   body {
     @apply bg-background text-foreground;
@@ -199,7 +201,7 @@ html[data-text-size="xl"] {
     @apply my-4 list-decimal space-y-2 pl-6;
   }
   .prose-store a {
-    @apply font-medium text-brand underline underline-offset-4;
+    @apply font-medium text-brand-text underline underline-offset-4;
   }
   .prose-store strong {
     @apply font-semibold;
@@ -253,4 +255,25 @@ html.lenis body {
   @page {
     margin: 14mm;
   }
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 9rem;
+  }
+}
+
+/* Page entrance: starts visible (good for LCP), just a gentle settle. */
+@keyframes page-enter {
+  from {
+    opacity: 0.6;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: page-enter 0.35s ease-out both;
 }

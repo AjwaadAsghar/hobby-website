@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Bell, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { PushToggle } from "@/components/admin/push-toggle";
 import { cn } from "@/lib/utils";
 
 type Item = { id: string; type: string; title: string; body: string; link: string | null; isRead: boolean; createdAt: string };
@@ -121,12 +122,13 @@ export function NotificationBell() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="relative inline-flex h-11 items-center gap-2 rounded-xl px-3 font-medium hover:bg-muted" aria-label={`Notifications, ${unread} unread`}>
+        <button className="relative inline-flex h-11 items-center gap-2 rounded-xl px-3 font-medium hover:bg-muted">
           <Bell className="size-5" aria-hidden />
           <span className="hidden sm:inline">Alerts</span>
           {unread > 0 && (
             <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-bold text-brand-foreground">
               {unread > 99 ? "99+" : unread}
+              <span className="sr-only"> unread</span>
             </span>
           )}
         </button>
@@ -164,7 +166,7 @@ export function NotificationBell() {
             <li key={i.id} className={cn("border-b last:border-0", !i.isRead && "bg-brand-soft/60")}>
               <Link href={i.link ?? "/admin"} onClick={() => !i.isRead && markOne(i.id)} className="block px-4 py-3 hover:bg-muted">
                 <p className="flex items-center gap-2 font-semibold">
-                  {!i.isRead && <span className="size-2 shrink-0 rounded-full bg-brand" aria-label="Unread" />}
+                  {!i.isRead && <span role="img" className="size-2 shrink-0 rounded-full bg-brand" aria-label="Unread" />}
                   {i.title}
                 </p>
                 {i.body && <p className="text-sm text-muted-foreground">{i.body}</p>}
@@ -173,6 +175,9 @@ export function NotificationBell() {
             </li>
           ))}
         </ul>
+        <div className="border-t px-4 py-3">
+          <PushToggle publicKey={process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? ""} />
+        </div>
       </PopoverContent>
     </Popover>
   );
