@@ -458,7 +458,7 @@ async function main() {
   // Categories
   const catIds: Record<string, string> = {};
   for (const [i, c] of categories.entries()) {
-    const image = writePlaceholder(`category-${c.slug}.svg`, placeholderSvg({ title: c.name, shape: c.shape, color: "#D7261E", angle: i }));
+    const image = writePlaceholder(`category-${c.slug}.svg`, placeholderSvg({ title: "", shape: c.shape, color: "#D7261E", angle: i }));
     const cat = await db.category.create({ data: { name: c.name, slug: c.slug, description: c.description, sortOrder: i, image } });
     catIds[c.slug] = cat.id;
   }
