@@ -150,3 +150,96 @@ export async function getTopCities(since: Date, take = 8) {
   });
   return rows.map((r) => ({ city: r.city, revenue: r._sum.total ?? 0, orders: r._count }));
 }
+
+/** Everything the Reports page needs for a date range. */
+export async function getReport(from: Date, to: Date) {
+  const orders = await db.order.findMany({
+    where: { createdAt: { gte: from, lte: to } },
+    select: {
+      createdAt: true,
+      total: true,
+      status: true,
+      paymentMethod: true,
+      discountTotal: true,
+      items: { select: { unitCost: true, quantity: true, lineTotal: true } },
+    },
+  });
+  const sales = orders.filter((o) => o.status !== "CANCELLED" && o.status !== "RETURNED");
+  const profitOf = (o: (typeof sales)[number]) => o.items.reduce((s, i) => s + i.lineTotal - i.unitCost * i.quantity, 0) - o.discountTotal;
+  const revenue = sales.reduce((s, o) => s + o.total, 0);
+  const profit = sales.reduce((s, o) => s + profitOf(o), 0);
+  const itemsSold = sales.reduce((s, o) => s + o.items.reduce((n, i) => n + i.quantity, 0), 0);
+
+  const days = Math.max(1, Math.ceil((to.getTime() - from.getTime()) / 86400000));
+  const monthly = days > 92;
+  const buckets: { key: string; label: string; start: Date; end: Date }[] = [];
+  if (monthly) {
+    let d = new Date(from.getFullYear(), from.getMonth(), 1);
+    while (d <= to) {
+      const end = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+      buckets.push({ key: d.toISOString(), label: d.toLocaleDateString("en-GB", { month: "short", year: "2-digit" }), start: d, end });
+      d = end;
+    }
+  } else {
+    let d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    while (d <= to) {
+      const end = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+      buckets.push({ key: d.toISOString(), label: d.toLocaleDateString("en-GB", { day: "numeric", month: "short" }), start: d, end });
+      d = end;
+    }
+  }
+  const series = buckets.map((b) => {
+    const inB = sales.filter((o) => o.createdAt >= b.start && o.createdAt < b.end);
+    return { key: b.key, label: b.label, revenue: inB.reduce((s, o) => s + o.total, 0), profit: inB.reduce((s, o) => s + profitOf(o), 0), orders: inB.length };
+  });
+
+  const byMethod = new Map<string, { orders: number; revenue: number }>();
+  for (const o of sales) {
+    const m = byMethod.get(o.paymentMethod) ?? { orders: 0, revenue: 0 };
+    byMethod.set(o.paymentMethod, { orders: m.orders + 1, revenue: m.revenue + o.total });
+  }
+
+  const [topProducts, topCities] = await Promise.all([getTopProductsBetween(from, to, 10), getTopCitiesBetween(from, to, 10)]);
+  return {
+    revenue,
+    profit,
+    orders: sales.length,
+    cancelled: orders.length - sales.length,
+    aov: sales.length ? Math.round(revenue / sales.length / 100) * 100 : 0,
+    itemsSold,
+    series,
+    monthly,
+    paymentMethods: [...byMethod.entries()].map(([method, v]) => ({ method, ...v })).sort((a, b) => b.revenue - a.revenue),
+    topProducts,
+    topCities,
+  };
+}
+
+async function getTopProductsBetween(from: Date, to: Date, take: number) {
+  const rows = await db.orderItem.groupBy({
+    by: ["productId", "title"],
+    where: { order: { ...SALE_FILTER, createdAt: { gte: from, lte: to } } },
+    _sum: { quantity: true, lineTotal: true },
+    orderBy: { _sum: { lineTotal: "desc" } },
+    take: take * 2,
+  });
+  const merged = new Map<string, { title: string; quantity: number; revenue: number }>();
+  for (const r of rows) {
+    const k = r.productId ?? r.title;
+    const prev = merged.get(k);
+    merged.set(k, { title: r.title, quantity: (prev?.quantity ?? 0) + (r._sum.quantity ?? 0), revenue: (prev?.revenue ?? 0) + (r._sum.lineTotal ?? 0) });
+  }
+  return [...merged.values()].sort((a, b) => b.revenue - a.revenue).slice(0, take);
+}
+
+async function getTopCitiesBetween(from: Date, to: Date, take: number) {
+  const rows = await db.order.groupBy({
+    by: ["city"],
+    where: { ...SALE_FILTER, createdAt: { gte: from, lte: to } },
+    _sum: { total: true },
+    _count: true,
+    orderBy: { _sum: { total: "desc" } },
+    take,
+  });
+  return rows.map((r) => ({ city: r.city, revenue: r._sum.total ?? 0, orders: r._count }));
+}

@@ -162,11 +162,11 @@ export function RankedBars({ rows }: { rows: { label: string; value: number; sub
     <ul className="space-y-3">
       {rows.map((r) => (
         <li key={r.label}>
-          <div className="mb-1 flex justify-between gap-3 text-sm">
-            <span className="truncate font-medium">{r.label}</span>
-            <span className="shrink-0 font-semibold tabular-nums">
+          <div className="mb-1 flex items-baseline justify-between gap-3 text-sm">
+            <span className="min-w-0 font-medium">{r.label}</span>
+            <span className="shrink-0 text-right font-semibold tabular-nums">
               {money(r.value)}
-              {r.sub && <span className="ml-1 font-normal text-muted-foreground">· {r.sub}</span>}
+              {r.sub && <span className="block text-xs font-normal text-muted-foreground">{r.sub}</span>}
             </span>
           </div>
           <div className="h-3 rounded-full bg-muted">

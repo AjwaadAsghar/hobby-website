@@ -17,7 +17,7 @@ export type TestResult = { ok: boolean; message: string };
 const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", "base64");
 
 export async function testIntegration(service: string): Promise<TestResult> {
-  const admin = await requireAdmin();
+  const admin = await requireAdmin(["OWNER"]);
   const s = await getSettings();
   let result: TestResult;
   switch (service) {

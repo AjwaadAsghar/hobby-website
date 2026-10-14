@@ -574,7 +574,7 @@ async function main() {
     const city = pick(cities);
     const shipping = subtotal >= storeDefaults.commerce.freeShippingThreshold ? 0 : zoneRate(city);
     const useDiscount = rand() < 0.15 && subtotal >= rs(5000);
-    const discount = useDiscount ? Math.round(subtotal * 0.1) : 0;
+    const discount = useDiscount ? Math.round(subtotal * 0.1 / 100) * 100 : 0;
     const method = pick(methods);
     let status: string;
     if (daysAgo > 7) status = rand() < 0.86 ? "DELIVERED" : rand() < 0.5 ? "CANCELLED" : "RETURNED";

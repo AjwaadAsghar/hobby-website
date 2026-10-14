@@ -3,6 +3,7 @@ import { CheckCircle2, CircleAlert, XCircle } from "lucide-react";
 import { db, isPostgres } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { integrations } from "@/server/integration-log";
+import { requireAdminPage } from "@/lib/auth-helpers";
 import { PageHeader } from "@/components/admin/admin-shell";
 import { PushToggle } from "@/components/admin/push-toggle";
 import { TestButton } from "./test-button";
@@ -22,6 +23,7 @@ type ServiceCard = {
 };
 
 export default async function IntegrationsPage() {
+  await requireAdminPage(["OWNER"]);
   let dbOk = true;
   try {
     await db.$queryRawUnsafe("SELECT 1");

@@ -51,8 +51,8 @@ const nav: { group: string; items: NavItem[] }[] = [
   {
     group: "Setup",
     items: [
-      { href: "/admin/settings", label: "Settings", icon: Settings },
-      { href: "/admin/settings/integrations", label: "Integrations", icon: Plug },
+      { href: "/admin/settings", label: "Settings", icon: Settings, ownerOnly: true },
+      { href: "/admin/settings/integrations", label: "Integrations", icon: Plug, ownerOnly: true },
       { href: "/admin/emails", label: "Email log", icon: Mails },
       { href: "/admin/users", label: "Admin users", icon: UserCog, ownerOnly: true },
     ],
@@ -64,7 +64,7 @@ function NavList({ role, badges, onNavigate }: { role: string; badges: Record<st
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname === href || (pathname.startsWith(href + "/") && !(href === "/admin/settings" && pathname.startsWith("/admin/settings/integrations")));
   return (
-    <nav aria-label="Admin" className="space-y-6">
+    <nav aria-label="Admin" className="space-y-4">
       {nav.map((g) => (
         <div key={g.group}>
           <p className="mb-1.5 px-3 text-xs font-bold tracking-wider text-muted-foreground uppercase">{g.group}</p>
@@ -81,7 +81,7 @@ function NavList({ role, badges, onNavigate }: { role: string; badges: Record<st
                       onClick={onNavigate}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex h-11 items-center gap-3 rounded-xl px-3 text-[0.95rem] font-medium transition-colors",
+                        "flex h-10 items-center gap-3 rounded-xl px-3 text-[0.95rem] font-medium transition-colors",
                         active ? "bg-foreground text-background" : "hover:bg-sidebar-accent",
                       )}
                     >
