@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function NewsletterForm({ dark, className }: { dark?: boolean; className?: string }) {
+  const id = useId();
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -35,22 +36,22 @@ export function NewsletterForm({ dark, className }: { dark?: boolean; className?
 
   return (
     <form onSubmit={submit} className={cn("w-full", className)} noValidate>
-      <label htmlFor="newsletter-email" className="mb-2 block font-medium">
+      <label htmlFor={`${id}-email`} className="mb-2 block font-medium">
         Your email address
       </label>
       <div className="flex flex-col gap-2 sm:flex-row">
         <input
-          id="newsletter-email"
+          id={`${id}-email`}
           type="email"
           required
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           aria-invalid={state === "error"}
-          aria-describedby="newsletter-msg"
+          aria-describedby={`${id}-msg`}
           placeholder="name@example.com"
           className={cn(
-            "h-12 flex-1 rounded-xl border-2 px-4 text-base outline-none",
+            "h-12 min-w-0 flex-1 rounded-xl border-2 px-4 text-base outline-none",
             dark ? "border-white/30 bg-white/10 text-white placeholder:text-white/70 focus:border-white" : "border-input bg-background focus:border-foreground",
           )}
         />
@@ -63,7 +64,7 @@ export function NewsletterForm({ dark, className }: { dark?: boolean; className?
           Subscribe
         </button>
       </div>
-      <p id="newsletter-msg" role="status" className={cn("mt-2 min-h-6 text-[0.95rem]", state === "error" && (dark ? "text-red-300" : "text-destructive"))}>
+      <p id={`${id}-msg`} role="status" className={cn("mt-2 min-h-6 text-[0.95rem]", state === "error" && (dark ? "text-red-300" : "text-destructive"))}>
         {message}
       </p>
     </form>
