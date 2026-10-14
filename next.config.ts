@@ -1,9 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Cache Components is off on purpose: the store reads settings, stock and
+  // prices from the database on every request so admin changes are instant.
+  // See DECISIONS.md.
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
+    formats: ["image/avif", "image/webp"],
+  },
+  serverExternalPackages: ["@prisma/client", "web-push", "exceljs", "sanitize-html"],
   turbopack: {
     rules: {
       "*.css": {
@@ -11,6 +16,26 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+      {
+        source: "/admin-sw.js",
+        headers: [
+          { key: "Service-Worker-Allowed", value: "/admin" },
+          { key: "Cache-Control", value: "no-cache" },
+        ],
+      },
+    ];
   },
 };
 

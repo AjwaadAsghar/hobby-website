@@ -1,0 +1,347 @@
+// Prisma schema for the store.
+//
+// Kept deliberately database-neutral so the same file works on SQLite (local)
+// and PostgreSQL (production): no native enums, no @db.* types, JSON stored as
+// strings. `scripts/prepare-db.ts` flips the provider below automatically
+// based on DATABASE_URL, so you never edit it by hand.
+//
+// Money is always stored as an integer in minor units (e.g. paisa / cents).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Settings (key/value, value is JSON)
+// ---------------------------------------------------------------------------
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Users (admins + optional customer accounts)
+// ---------------------------------------------------------------------------
+
+model User {
+  id                 String          @id @default(cuid())
+  email              String          @unique
+  name               String
+  phone              String?
+  passwordHash       String
+  /// OWNER | STAFF | CUSTOMER
+  role               String          @default("CUSTOMER")
+  mustChangePassword Boolean         @default(false)
+  isActive           Boolean         @default(true)
+  lastLoginAt        DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  addresses          Address[]
+  orders             Order[]
+  pushSubscriptions  PushSubscription[]
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String   @default("Home")
+  name      String
+  phone     String
+  address   String
+  city      String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Catalog
+// ---------------------------------------------------------------------------
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String    @default("")
+  image       String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id                String           @id @default(cuid())
+  title             String
+  slug              String           @unique
+  shortDescription  String           @default("")
+  /// Sanitised HTML
+  description       String           @default("")
+  price             Int
+  compareAtPrice    Int?
+  costPrice         Int?
+  sku               String?          @unique
+  brand             String           @default("")
+  categoryId        String?
+  category          Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  /// BEGINNER | INTERMEDIATE | EXPERT
+  skillLevel        String           @default("BEGINNER")
+  /// JSON object of spec label -> value (scale, motor, battery, range, runTime ...)
+  specs             String           @default("{}")
+  /// JSON array of strings
+  inTheBox          String           @default("[]")
+  /// Comma separated
+  tags              String           @default("")
+  /// DRAFT | PUBLISHED
+  status            String           @default("DRAFT")
+  featured          Boolean          @default(false)
+  /// Stock for products without variants. Products with variants use variant stock.
+  stock             Int              @default(0)
+  lowStockThreshold Int              @default(3)
+  /// Optional GLB model URL for the 3D viewer
+  modelUrl          String?
+  soldCount         Int              @default(0)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  images            ProductImage[]
+  variants          ProductVariant[]
+  orderItems        OrderItem[]
+  compatibleParts   Product[]        @relation("CompatibleParts")
+  compatibleWith    Product[]        @relation("CompatibleParts")
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String  @default("")
+  sortOrder Int     @default(0)
+
+  @@index([productId])
+}
+
+model ProductVariant {
+  id        String      @id @default(cuid())
+  productId String
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  /// Display name e.g. "Red / 1:10 / RTR"
+  name      String
+  /// JSON object e.g. {"Color":"Red","Scale":"1:10","Build":"RTR"}
+  options   String      @default("{}")
+  sku       String?     @unique
+  /// Overrides product price when set
+  price     Int?
+  stock     Int         @default(0)
+  sortOrder Int         @default(0)
+  orderItems OrderItem[]
+
+  @@index([productId])
+}
+
+// ---------------------------------------------------------------------------
+// Orders
+// ---------------------------------------------------------------------------
+
+model Order {
+  id               String               @id @default(cuid())
+  number           Int                  @unique
+  /// Random secret used for guest links (confirmation page, proof upload)
+  accessToken      String               @unique
+  userId           String?
+  user             User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  customerName     String
+  phone            String
+  /// Digits-only phone used for lookups
+  phoneNormalized  String
+  email            String?
+  address          String
+  city             String
+  notes            String               @default("")
+  /// NEW | CONFIRMED | PACKED | SHIPPED | DELIVERED | CANCELLED | RETURNED
+  status           String               @default("NEW")
+  /// cod | bank | jazzcash | easypaisa | ...
+  paymentMethod    String
+  /// UNPAID | AWAITING_VERIFICATION | PAID | REJECTED
+  paymentStatus    String               @default("UNPAID")
+  paymentProofUrl  String?
+  paymentReference String?
+  subtotal         Int
+  discountTotal    Int                  @default(0)
+  shippingTotal    Int                  @default(0)
+  total            Int
+  discountCode     String?
+  shippingZone     String?
+  courierName      String?
+  trackingNumber   String?
+  internalNotes    String               @default("")
+  stockRestored    Boolean              @default(false)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  items            OrderItem[]
+  history          OrderStatusHistory[]
+
+  @@index([status])
+  @@index([phoneNormalized])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String          @id @default(cuid())
+  orderId     String
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variantId   String?
+  variant     ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  title       String
+  variantName String?
+  sku         String?
+  image       String?
+  unitPrice   Int
+  unitCost    Int             @default(0)
+  quantity    Int
+  lineTotal   Int
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model OrderStatusHistory {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    String
+  note      String   @default("")
+  actor     String   @default("system")
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+}
+
+// ---------------------------------------------------------------------------
+// Pricing & shipping
+// ---------------------------------------------------------------------------
+
+model DiscountCode {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  /// PERCENT | FIXED
+  type       String
+  /// Percent (1-100) or fixed amount in minor units
+  value      Int
+  minOrder   Int       @default(0)
+  expiresAt  DateTime?
+  usageLimit Int?
+  usedCount  Int       @default(0)
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+}
+
+model ShippingZone {
+  id        String   @id @default(cuid())
+  name      String
+  /// JSON array of city names. Empty array on the default zone.
+  cities    String   @default("[]")
+  rate      Int
+  /// Used for any city not listed in another zone
+  isDefault Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Content
+// ---------------------------------------------------------------------------
+
+model Page {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  /// Sanitised HTML
+  content   String
+  updatedAt DateTime @updatedAt
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Notifications & logs
+// ---------------------------------------------------------------------------
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  html      String
+  /// SENT | LOGGED | FAILED
+  status    String
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+/// One row per attempt on an external channel, shown on the Integrations page.
+model IntegrationLog {
+  id        String   @id @default(cuid())
+  /// database | cloudinary | resend | telegram | webpush
+  service   String
+  /// OK | SKIPPED | FAILED
+  status    String
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([service, createdAt])
+}
+
+/// In-dashboard alerts (bell icon).
+model AdminNotification {
+  id        String   @id @default(cuid())
+  /// NEW_ORDER | LOW_STOCK | PAYMENT_PROOF | CONTACT
+  type      String
+  title     String
+  body      String   @default("")
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
