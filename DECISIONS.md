@@ -39,3 +39,15 @@ Choices made while building the store without being able to ask. Each one is eas
 | 21 | **Notifications are sent after the response** (`after()` from `next/server`). | Checkout stays fast even if Telegram or email is slow or down. |
 | 22 | **Rate limits:** checkout 8 per 10 minutes per IP; login 20 per 15 minutes per IP and 8 per email; contact form 5 per 15 minutes; tracking 20 per 10 minutes. These are in-memory (see `src/lib/rate-limit.ts`). | It's simple and needs no extra service. Swap in Upstash Redis if strict global limits are needed. |
 | 23 | **Turbopack's on-disk cache is turned off** in `next.config.ts`. | The development machine ran out of disk space during the build. Set both flags to `true` for faster restarts if you have the room. |
+
+## Notifications & admin
+
+| # | Decision | Why |
+|---|----------|-----|
+| 24 | **In-dashboard alerts poll every 12 seconds** (paused while the tab is hidden) instead of using WebSockets or Server-Sent Events. | Vercel's free tier doesn't keep long connections open. Polling is reliable everywhere and cheap at this scale. |
+| 25 | **The new-order sound is generated with the Web Audio API.** | No sound file is needed. Browsers only allow sound after the admin has clicked once on the page; there's a Sound on/off toggle in the bell menu. |
+| 26 | **Web push uses a service worker at `/admin-sw.js` scoped to `/admin/`**, plus a manifest at `/admin/manifest.webmanifest`. That makes the admin installable as an app. iPhones need the admin added to the Home Screen before push works (iOS 16.4+). | That's the PWA approach the spec asks for, and iOS only supports web push for Home Screen apps. |
+| 27 | **Low-stock alerts fire once, when stock crosses the threshold.** They don't fire on every order afterwards. | This avoids alert spam. |
+| 28 | **Customers get an email on every status change** except "New". They also get one when a payment is approved or rejected. Status emails can be switched off in Settings → Notifications. | The spec says status changes email the customer automatically. |
+| 29 | **Invoices and packing slips are print-friendly web pages** (browser Print, then Save as PDF), not generated PDF files. | There's no heavy PDF library, the branding always matches current settings, and it works on any printer. |
+| 30 | **The admin uses the same 18px base text size and accessible components as the store.** | It's comfortable for older staff too. |

@@ -13,7 +13,8 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const role = req.auth?.user?.role;
 
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+  const publicAdmin = pathname === "/admin/login" || pathname === "/admin/manifest.webmanifest";
+  if (pathname.startsWith("/admin") && !publicAdmin) {
     if (!role || !(ADMIN_ROLES as readonly string[]).includes(role)) {
       const url = new URL("/admin/login", req.nextUrl);
       if (pathname !== "/admin") url.searchParams.set("next", pathname);
