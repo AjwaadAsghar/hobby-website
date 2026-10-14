@@ -5,6 +5,7 @@ import { getSettings } from "@/lib/settings";
 import { db } from "@/lib/db";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { NotificationBell } from "@/components/admin/notification-bell";
+import { ThemeToggle } from "@/components/store/theme-toggle";
 import { PENDING_STATUSES } from "@/lib/order-status";
 import { lowStockCount } from "@/server/admin-stats";
 
@@ -32,7 +33,12 @@ export default async function AdminPanelLayout({ children }: LayoutProps<"/admin
       storeName={s.branding.storeName}
       user={{ name: user.name, email: user.email, role: user.role }}
       badges={{ pendingOrders, lowStock }}
-      topRight={<NotificationBell />}
+      topRight={
+        <>
+          <ThemeToggle className="h-11 rounded-xl px-3 text-base [&>span]:hidden sm:[&>span]:inline" />
+          <NotificationBell />
+        </>
+      }
     >
       {children}
     </AdminShell>
