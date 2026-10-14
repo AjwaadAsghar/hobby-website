@@ -277,3 +277,78 @@ html.lenis body {
 .page-enter {
   animation: page-enter 0.35s ease-out both;
 }
+
+/*
+ * Homepage hero planes. Each .hero-plane layer is the size of the hero, so
+ * translate percentages move the plane across the whole hero; the body holds
+ * the heading (--tilt, tuned per breakpoint to match the flight angle).
+ */
+.hero-plane {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: hero-plane-left 3.4s cubic-bezier(0.4, 0, 0.6, 1) 0.35s 1 both;
+  --tilt: -58deg;
+}
+.hero-plane-right {
+  animation-name: hero-plane-right;
+  animation-delay: 0.95s;
+}
+.hero-plane-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(56px, 7vw, 100px);
+  rotate: var(--tilt);
+  animation: hero-plane-climb 3.4s ease-in 0.35s 1 both;
+}
+.hero-plane-right .hero-plane-body {
+  rotate: calc(-180deg - var(--tilt));
+  animation-delay: 0.95s;
+}
+.hero-contrail {
+  position: absolute;
+  top: 50%;
+  right: 88%;
+  width: 280%;
+  height: 3px;
+  translate: 0 -50%;
+  border-radius: 999px;
+  background: linear-gradient(to right, transparent, rgb(255 255 255 / 0.35));
+  transform-origin: right center;
+  animation: hero-contrail 3.4s ease-out 0.35s 1 both;
+}
+.hero-plane-right .hero-contrail {
+  animation-delay: 0.95s;
+}
+@keyframes hero-plane-left {
+  0% { translate: -8% 98%; opacity: 0; }
+  8% { opacity: 1; }
+  50% { translate: 44% 44%; }
+  88% { opacity: 1; }
+  100% { translate: 108% -28%; opacity: 0; }
+}
+@keyframes hero-plane-right {
+  0% { translate: 100% 98%; opacity: 0; }
+  8% { opacity: 1; }
+  50% { translate: 50% 44%; }
+  88% { opacity: 1; }
+  100% { translate: -18% -28%; opacity: 0; }
+}
+@keyframes hero-plane-climb {
+  from { scale: 1.2; }
+  to { scale: 0.7; }
+}
+@keyframes hero-contrail {
+  from { scale: 0 1; }
+  30% { scale: 1 1; }
+}
+@media (min-width: 640px) {
+  .hero-plane { --tilt: -42deg; }
+}
+@media (min-width: 1024px) {
+  .hero-plane { --tilt: -28deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-plane { display: none; }
+}

@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Banknote, Headset, ShieldCheck, Star, Truck } from "lucide-react";
 import { getSettings, siteUrl } from "@/lib/settings";
-import { safeHex } from "@/lib/color";
 import { getActiveCategories, getBestSellers, getFeaturedProducts, getNewArrivals } from "@/server/catalog";
-import { Hero3D } from "@/components/three/hero-3d";
+import { HeroPlanes } from "@/components/store/hero-planes";
 import { ProductGrid } from "@/components/store/product-card";
 import { CategoryTile } from "@/components/store/category-tile";
 import { NewsletterForm } from "@/components/store/newsletter-form";
@@ -67,33 +66,35 @@ export default async function HomePage() {
     getNewArrivals(4),
     getBestSellers(4),
   ]);
-  const accent = safeHex(s.branding.accentColor);
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd(s)).replace(/</g, "\\u003c") }} />
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b bg-gradient-to-b from-muted/60 to-background">
-        <div className="container-store grid items-center gap-6 py-8 lg:grid-cols-2 lg:gap-8 lg:py-12">
-          <div className="relative z-10 max-w-xl">
-            <p className="mb-4 inline-flex items-center gap-2 rounded-full border bg-background px-3.5 py-1.5 text-[0.95rem] font-semibold">
-              <span className="size-2 rounded-full bg-brand" aria-hidden /> {s.branding.tagline}
-            </p>
-            <h1 className="text-[2.6rem] leading-[1.05] font-extrabold tracking-tight sm:text-6xl">{s.homepage.heroTitle}</h1>
-            <p className="mt-5 text-lg text-muted-foreground sm:text-xl">{s.homepage.heroSubtitle}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" variant="brand">
-                <Link href={s.homepage.heroCtaHref || "/shop"}>
-                  {s.homepage.heroCtaLabel || "Shop now"} <ArrowRight aria-hidden />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-2 border-foreground">
-                <Link href="/shop?skill=BEGINNER">Best for beginners</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="relative -mx-4 aspect-[4/3] max-h-[560px] sm:mx-0 lg:aspect-[5/4]">
-            <Hero3D accent={accent} modelUrl={s.branding.heroModelUrl} />
+      {/* Hero: text only, with two planes flying out of the corners on load. */}
+      <section className="relative isolate overflow-hidden bg-[#09090b] text-white" aria-labelledby="hero-title">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,color-mix(in_oklch,var(--brand)_22%,transparent),transparent_70%)]"
+        />
+        <HeroPlanes />
+
+        <div className="container-store relative z-10 flex flex-col items-center py-20 text-center sm:py-24 lg:py-32">
+          <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-[0.95rem] font-semibold text-zinc-100">
+            <span className="size-2 rounded-full bg-brand" aria-hidden /> {s.branding.tagline}
+          </p>
+          <h1 id="hero-title" className="mt-6 max-w-4xl text-[2.6rem] leading-[1.04] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+            {s.homepage.heroTitle}
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg text-pretty text-zinc-300 sm:text-xl">{s.homepage.heroSubtitle}</p>
+          <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <Button asChild size="lg" variant="brand">
+              <Link href={s.homepage.heroCtaHref || "/shop"}>
+                {s.homepage.heroCtaLabel || "Shop now"} <ArrowRight aria-hidden />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="border-2 border-white/80 bg-transparent text-white hover:bg-white hover:text-zinc-950">
+              <Link href="/shop?sort=price-asc">Lowest prices first</Link>
+            </Button>
           </div>
         </div>
       </section>

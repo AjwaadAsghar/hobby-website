@@ -10,7 +10,7 @@ import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { storeDefaults } from "../src/config/store";
 import { defaultPages } from "../src/config/default-pages";
-import { placeholderSvg, writePlaceholder, type Shape } from "./placeholders";
+import { comingSoonSvg, placeholderSvg, writePlaceholder, type Shape } from "./placeholders";
 
 const db = new PrismaClient();
 const force = process.argv.includes("--force");
@@ -468,7 +468,7 @@ async function main() {
   for (const p of products) {
     const slug = p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
     const images = [0, 1, 2].map((angle) =>
-      writePlaceholder(`${slug}-${angle + 1}.svg`, placeholderSvg({ title: p.title, shape: p.shape, color: p.color, angle, label: p.brand })),
+      writePlaceholder(`${slug}-${angle + 1}.svg`, comingSoonSvg({ title: p.title, shape: p.shape, angle, brand: p.brand })),
     );
     const created = await db.product.create({
       data: {

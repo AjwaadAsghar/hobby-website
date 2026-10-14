@@ -78,9 +78,6 @@ export function BrandingForm({ initial }: { initial: StoreSettings["branding"] }
         </div>
         {errors.accentColor && <p className="font-medium text-destructive">{errors.accentColor}</p>}
       </Card>
-      <Card title="Homepage 3D model" description="The homepage shows a built-in 3D drone. Upload your own .glb model to replace it.">
-        <UploadField label="3D model (.glb)" value={v.heroModelUrl} onChange={set("heroModelUrl")} folder="models" kind="model" />
-      </Card>
       <SaveBar pending={pending} />
     </form>
   );

@@ -139,6 +139,34 @@ export function placeholderSvg(opts: { title: string; shape: Shape; color: strin
 </svg>`;
 }
 
+const viewLabels = ["Front view", "Side view", "Detail"];
+
+/**
+ * Neutral "photo coming soon" tile for products without real photos: a faint
+ * silhouette of the product type, a label and the brand. Honest about being a
+ * placeholder, and calm enough to sit in a product grid.
+ */
+export function comingSoonSvg(opts: { title: string; shape: Shape; angle: number; brand?: string }): string {
+  const view = viewLabels[opts.angle % viewLabels.length];
+  const brand = opts.brand ? esc(opts.brand.toUpperCase()) : "";
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="${esc(opts.title)} – photo coming soon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7f7f8"/><stop offset="100%" stop-color="#ececef"/></linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="#d4d4d8"/></pattern>
+    <filter id="ghost"><feColorMatrix type="matrix" values="0 0 0 0 0.63  0 0 0 0 0.63  0 0 0 0 0.67  0 0 0 1 0"/></filter>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <rect width="800" height="800" fill="url(#dots)" opacity=".7"/>
+  <g filter="url(#ghost)" opacity=".42" transform="translate(400 320) scale(.6) translate(-400 -420)">${shapeSvg(opts.shape, "#000")}</g>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <rect x="130" y="500" width="540" height="92" rx="46" fill="#ffffff" stroke="#d4d4d8" stroke-width="3"/>
+    <text x="400" y="561" font-size="44" font-weight="700" fill="#3f3f46">Photo coming soon</text>
+    ${brand ? `<text x="400" y="662" font-size="38" font-weight="700" letter-spacing="4" fill="#71717a">${brand}</text>` : ""}
+    <text x="400" y="${brand ? 714 : 662}" font-size="30" fill="#a1a1aa">${view}</text>
+  </g>
+</svg>`;
+}
+
 export function writePlaceholder(fileName: string, svg: string): string {
   const dir = path.join(process.cwd(), "public", "placeholders");
   fs.mkdirSync(dir, { recursive: true });

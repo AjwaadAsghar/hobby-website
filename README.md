@@ -22,7 +22,7 @@ Sign in with `admin@hobbyshobby.local` / `ChangeMe123!`. You will be asked to ch
 ## What's included
 
 **Storefront**
-- Homepage with a 3D hero, categories, featured products, new arrivals, best sellers and testimonials
+- Homepage with an animated text hero (two planes take off from the corners), categories, featured products, new arrivals, best sellers and testimonials
 - Shop, category and search pages with filters, sorting and typo-tolerant search
 - Product pages with a zoomable gallery, optional 3D model, variants, specs and related products
 - Cart, two-step guest checkout, discount codes and shipping by city

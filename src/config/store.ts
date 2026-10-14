@@ -49,8 +49,6 @@ export type StoreSettings = {
     logoUrl: string;
     faviconUrl: string;
     accentColor: string;
-    /** Optional GLB model shown in the homepage hero instead of the built-in drone */
-    heroModelUrl: string;
   };
   contact: {
     email: string;
@@ -102,7 +100,6 @@ export const storeDefaults: StoreSettings = {
     logoUrl: "",
     faviconUrl: "",
     accentColor: "#D7261E",
-    heroModelUrl: "",
   },
   contact: {
     email: "hello@hobbyshobby.local",
@@ -158,9 +155,9 @@ export const storeDefaults: StoreSettings = {
     customerEmails: { confirmation: true, statusUpdates: true },
   },
   homepage: {
-    heroTitle: "Built to fly. Built to race.",
+    heroTitle: "Hobby products at prices that beat the market.",
     heroSubtitle:
-      "Ready-to-run RC cars, planes and drones, plus the parts and batteries to keep them going. Genuine products, delivered across Pakistan.",
+      "RC cars, planes, drones, parts and batteries at competitive prices. 100% genuine, cash on delivery and fast delivery across Pakistan.",
     heroCtaLabel: "Shop all products",
     heroCtaHref: "/shop",
     banners: [],

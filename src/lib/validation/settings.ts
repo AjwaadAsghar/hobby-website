@@ -13,7 +13,6 @@ export const brandingSchema = z.object({
   logoUrl: url,
   faviconUrl: url,
   accentColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Please pick a colour (like #D7261E)."),
-  heroModelUrl: url,
 });
 
 export const contactSchema = z.object({
