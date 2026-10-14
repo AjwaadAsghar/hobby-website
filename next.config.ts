@@ -8,7 +8,13 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
     formats: ["image/avif", "image/webp"],
   },
-  serverExternalPackages: ["@prisma/client", "web-push", "exceljs", "sanitize-html"],
+  experimental: {
+    // The development machine is very low on disk space; Turbopack's on-disk
+    // cache can grow to several GB. Re-enable for faster restarts if you have room.
+    turbopackFileSystemCacheForDev: false,
+    turbopackFileSystemCacheForBuild: false,
+  },
+  serverExternalPackages:["@prisma/client", "web-push", "exceljs", "sanitize-html"],
   turbopack: {
     rules: {
       "*.css": {

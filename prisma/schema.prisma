@@ -175,7 +175,7 @@ model Order {
   status           String               @default("NEW")
   /// cod | bank | jazzcash | easypaisa | ...
   paymentMethod    String
-  /// UNPAID | AWAITING_VERIFICATION | PAID | REJECTED
+  /// UNPAID (cash on delivery) | AWAITING_PAYMENT (no screenshot yet) | AWAITING_VERIFICATION | PAID | REJECTED
   paymentStatus    String               @default("UNPAID")
   paymentProofUrl  String?
   paymentReference String?

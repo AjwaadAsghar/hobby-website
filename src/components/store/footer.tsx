@@ -6,6 +6,7 @@ import { telLink } from "@/lib/format";
 import { Logo } from "@/components/store/logo";
 import { SocialIcons } from "@/components/store/social-icons";
 import { NewsletterForm } from "@/components/store/newsletter-form";
+import { getEnabledPaymentMethods } from "@/lib/payments/registry";
 
 export async function Footer() {
   const [s, categories] = await Promise.all([getSettings(), getActiveCategories()]);
@@ -86,7 +87,7 @@ export async function Footer() {
           <p>
             © {year} {s.branding.storeName}. All rights reserved.
           </p>
-          <p>Cash on delivery · Bank transfer · JazzCash · Easypaisa</p>
+          <p>{getEnabledPaymentMethods(s).map((m) => m.label).join(" · ")}</p>
         </div>
       </div>
     </footer>

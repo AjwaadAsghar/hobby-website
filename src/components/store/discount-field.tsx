@@ -27,7 +27,7 @@ export function DiscountField({ code, quote }: { code: string; quote: ClientQuot
             aria-invalid={d ? !d.valid : undefined}
             aria-describedby="discount-msg"
             placeholder="e.g. WELCOME10"
-            className="h-12 min-w-0 flex-1 rounded-xl border-2 border-input bg-background px-4 text-base uppercase"
+            className="h-12 min-w-0 flex-1 rounded-xl border-2 border-input bg-background px-4 text-base uppercase placeholder:normal-case"
           />
           <button type="submit" className="h-12 rounded-xl bg-foreground px-5 font-semibold text-background hover:opacity-90">
             Apply

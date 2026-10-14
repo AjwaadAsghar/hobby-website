@@ -24,3 +24,18 @@ Choices made while building the store without being able to ask. Each one is eas
 | 11 | **Page content uses tokens** like `{{storeName}}` and `{{phone}}`, filled in when the page is shown. | Renaming the store updates the About, FAQ and policy pages too. |
 | 12 | **Products with variants keep stock on each variant.** Products without variants use the product's own stock. | This matches how Shopify does it. |
 | 13 | **Placeholder product images are generated SVGs** (`prisma/placeholders.ts`). | They work offline with no copyright problems. Uploading real photos in admin replaces them. |
+
+## Checkout, orders & payments
+
+| # | Decision | Why |
+|---|----------|-----|
+| 14 | **Checkout is two steps on one page** (Details, then Payment) with the 4-step indicator. The cart page is step 1 and the confirmation page is step 4. | It needs the fewest page loads and the fewest fields: name, phone, address and city are required; email and notes are optional. |
+| 15 | **If anything changed in the cart, the order is refused rather than silently adjusted.** That includes price, stock or discount validity. The customer is asked to review the cart. | No surprises on the bill. |
+| 16 | **Payment statuses:** `UNPAID` (cash on delivery), `AWAITING_PAYMENT` (bank/wallet chosen, no screenshot yet), `AWAITING_VERIFICATION` (screenshot uploaded), `PAID`, `REJECTED`. Cash on delivery becomes `PAID` automatically when the order is marked Delivered. | This matches how the shop actually gets paid. |
+| 17 | **Approving a payment on a "New" order also moves it to "Confirmed".** | This saves the owner a click. |
+| 18 | **Guest order links use a random secret token** in the URL. The tracking page needs the order number plus the phone number, and accepts any phone format: 0300…, +92 300…, 92300… | Strangers can't look up other people's orders. |
+| 19 | **Local uploads are stored in `/uploads`** (outside `public/`) and served by `/media/...`. Payment screenshots can only be opened by admins. On Cloudinary, screenshots use unguessable URLs. | `next start` doesn't serve files added to `public/` after the build. |
+| 20 | **Order history in customer accounts only shows orders placed while signed in.** It never matches by email. | Email addresses aren't verified, so matching by email would leak orders. |
+| 21 | **Notifications are sent after the response** (`after()` from `next/server`). | Checkout stays fast even if Telegram or email is slow or down. |
+| 22 | **Rate limits:** checkout 8 per 10 minutes per IP; login 20 per 15 minutes per IP and 8 per email; contact form 5 per 15 minutes; tracking 20 per 10 minutes. These are in-memory (see `src/lib/rate-limit.ts`). | It's simple and needs no extra service. Swap in Upstash Redis if strict global limits are needed. |
+| 23 | **Turbopack's on-disk cache is turned off** in `next.config.ts`. | The development machine ran out of disk space during the build. Set both flags to `true` for faster restarts if you have the room. |
