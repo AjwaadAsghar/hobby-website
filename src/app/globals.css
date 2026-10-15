@@ -314,9 +314,12 @@ html.lenis body {
   height: 3px;
   translate: 0 -50%;
   border-radius: 999px;
-  background: linear-gradient(to right, transparent, rgb(255 255 255 / 0.35));
+  background: linear-gradient(to right, transparent, rgb(24 24 27 / 0.3));
   transform-origin: right center;
   animation: hero-contrail 3.4s ease-out 0.35s 1 both;
+}
+.dark .hero-contrail {
+  background: linear-gradient(to right, transparent, rgb(255 255 255 / 0.35));
 }
 .hero-plane-right .hero-contrail {
   animation-delay: 0.95s;

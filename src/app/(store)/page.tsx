@@ -71,28 +71,28 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd(s)).replace(/</g, "\\u003c") }} />
       {/* Hero: text only, with two planes flying out of the corners on load. */}
-      <section className="relative isolate overflow-hidden bg-[#09090b] text-white" aria-labelledby="hero-title">
+      <section className="relative isolate overflow-hidden bg-zinc-50 text-zinc-950 dark:bg-[#09090b] dark:text-white" aria-labelledby="hero-title">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,color-mix(in_oklch,var(--brand)_22%,transparent),transparent_70%)]"
+          className="pointer-events-none absolute inset-0 -z-10 opacity-50 dark:opacity-100 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,color-mix(in_oklch,var(--brand)_22%,transparent),transparent_70%)]"
         />
         <HeroPlanes />
 
         <div className="container-store relative z-10 flex flex-col items-center py-20 text-center sm:py-24 lg:py-32">
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-[0.95rem] font-semibold text-zinc-100">
+          <p className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-[0.95rem] font-semibold text-zinc-800 dark:border-white/15 dark:bg-white/5 dark:text-zinc-100">
             <span className="size-2 rounded-full bg-brand" aria-hidden /> {s.branding.tagline}
           </p>
           <h1 id="hero-title" className="mt-6 max-w-4xl text-[2.6rem] leading-[1.04] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
             {s.homepage.heroTitle}
           </h1>
-          <p className="mt-5 max-w-2xl text-lg text-pretty text-zinc-300 sm:text-xl">{s.homepage.heroSubtitle}</p>
+          <p className="mt-5 max-w-2xl text-lg text-pretty text-zinc-600 sm:text-xl dark:text-zinc-300">{s.homepage.heroSubtitle}</p>
           <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <Button asChild size="lg" variant="brand">
               <Link href={s.homepage.heroCtaHref || "/shop"}>
                 {s.homepage.heroCtaLabel || "Shop now"} <ArrowRight aria-hidden />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-2 border-white/80 bg-transparent text-white hover:bg-white hover:text-zinc-950">
+            <Button asChild size="lg" variant="outline" className="border-2 border-zinc-900 bg-transparent text-zinc-900 hover:bg-zinc-900 hover:text-white dark:border-white/80 dark:text-white dark:hover:bg-white dark:hover:text-zinc-950">
               <Link href="/shop?sort=price-asc">Lowest prices first</Link>
             </Button>
           </div>
