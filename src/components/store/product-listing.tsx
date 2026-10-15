@@ -78,7 +78,7 @@ export async function ProductListing({
   const sort = filters.sort ?? (filters.q ? "relevance" : "featured");
   const sortOptions = filters.q ? [{ value: "relevance", label: "Best match" }, ...SORT_OPTIONS] : SORT_OPTIONS;
   const activeCount =
-    (filters.brands?.length ?? 0) + (filters.skills?.length ?? 0) + (filters.inStock ? 1 : 0) + (filters.minPrice || filters.maxPrice ? 1 : 0) + (showCategoryFilter && filters.category ? 1 : 0);
+    (filters.brands?.length ?? 0) + (filters.inStock ? 1 : 0) + (filters.minPrice || filters.maxPrice ? 1 : 0) + (showCategoryFilter && filters.category ? 1 : 0);
 
   const from = result.total === 0 ? 0 : (result.page - 1) * result.pageSize + 1;
   const to = Math.min(result.total, result.page * result.pageSize);
@@ -98,7 +98,6 @@ export async function ProductListing({
             q: filters.q,
             category: filters.category,
             brands: filters.brands ?? [],
-            skills: filters.skills ?? [],
             min: filters.minPrice,
             max: filters.maxPrice,
             inStock: !!filters.inStock,

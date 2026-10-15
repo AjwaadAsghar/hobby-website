@@ -33,7 +33,6 @@ export async function Header() {
           </p>
           <div className="flex items-center gap-4">
             <TextSizeToggle className="hidden lg:flex" />
-            <ThemeToggle className="hidden text-white hover:bg-white/15 lg:inline-flex" />
             {s.contact.phone && (
               <a href={telLink(s.contact.phone)} className="inline-flex items-center gap-1.5 font-medium hover:underline">
                 <Phone className="size-4" aria-hidden />
@@ -55,6 +54,7 @@ export async function Header() {
           </Link>
           <SearchBar className="hidden max-w-2xl flex-1 lg:block" />
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
+            <ThemeToggle className="hidden h-12 rounded-full px-3.5 text-base font-semibold sm:inline-flex [&>span]:hidden xl:[&>span]:inline" />
             <Link
               href="/shop"
               className="hidden h-12 items-center gap-2 rounded-full px-4 font-semibold hover:bg-muted sm:inline-flex lg:hidden"

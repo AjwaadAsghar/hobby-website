@@ -138,7 +138,6 @@ export function parseListingParams(sp: Record<string, string | string[] | undefi
     category: str(sp.category),
     q: str(sp.q)?.slice(0, 100),
     brands: arr(sp.brand),
-    skills: arr(sp.skill).filter((s) => SKILL_LEVELS.some((l) => l.value === s)),
     minPrice: num(sp.min),
     maxPrice: num(sp.max),
     inStock: str(sp.stock) === "1",

@@ -75,8 +75,8 @@ export const defaultPages: Record<string, { title: string; content: string }> = 
 <li><strong>PNP (Plug and Play):</strong> you add your own receiver, battery and transmitter.</li>
 <li><strong>Kit:</strong> you build it yourself. Great fun if you enjoy assembly.</li>
 </ul>
-<h3>Which model is best for a beginner?</h3>
-<p>Filter by <a href="/shop?skill=BEGINNER">Beginner</a> on our shop page, or message us on WhatsApp with your budget and we will suggest something.</p>
+<h3>Not sure which part fits my model?</h3>
+<p>Message us on WhatsApp with your model name and what you need, and we will tell you which parts fit.</p>
 <h3>How do I track my order?</h3>
 <p>Go to <a href="/track">Track my order</a> and enter your order number and the phone number you used at checkout.</p>
 <h3>Do I need an account to order?</h3>

@@ -10,7 +10,6 @@ export type FilterState = {
   q?: string;
   category?: string;
   brands: string[];
-  skills: string[];
   min?: number;
   max?: number;
   inStock: boolean;
@@ -24,23 +23,15 @@ type Facets = {
   maxPrice: number;
 };
 
-const skills = [
-  { value: "BEGINNER", label: "Beginner" },
-  { value: "INTERMEDIATE", label: "Intermediate" },
-  { value: "EXPERT", label: "Expert" },
-];
-
 function buildQuery(form: HTMLFormElement): string {
   const fd = new FormData(form);
   const params = new URLSearchParams();
   const brand = fd.getAll("brand").map(String);
-  const skill = fd.getAll("skill").map(String);
   for (const [k, v] of fd.entries()) {
-    if (k === "brand" || k === "skill") continue;
+    if (k === "brand") continue;
     if (String(v).trim()) params.set(k, String(v).trim());
   }
   if (brand.length) params.set("brand", brand.join(","));
-  if (skill.length) params.set("skill", skill.join(","));
   return params.toString();
 }
 
@@ -100,13 +91,6 @@ function FilterFields({ state, facets, basePath, autoSubmit }: { state: FilterSt
           </select>
         </fieldset>
       )}
-
-      <fieldset>
-        <legend className="mb-1 text-lg font-semibold">Skill level</legend>
-        {skills.map((s) => (
-          <Checkbox key={s.value} name="skill" value={s.value} label={s.label} defaultChecked={state.skills.includes(s.value)} onChange={onChange} />
-        ))}
-      </fieldset>
 
       <fieldset>
         <legend className="mb-1 text-lg font-semibold">Availability</legend>

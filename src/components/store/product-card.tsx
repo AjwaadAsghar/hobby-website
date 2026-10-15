@@ -7,14 +7,7 @@ import type { ProductCardData } from "@/server/catalog";
 import { useMoney } from "@/components/store-context";
 import { cart } from "@/lib/cart/cart-store";
 import { ProductImage } from "@/components/store/product-image";
-import { cn } from "@/lib/utils";
 
-const skillStyles: Record<string, string> = {
-  BEGINNER: "bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
-  INTERMEDIATE: "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200",
-  EXPERT: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900",
-};
-const skillNames: Record<string, string> = { BEGINNER: "Beginner", INTERMEDIATE: "Intermediate", EXPERT: "Expert" };
 
 export function StockNote({ stock, low }: { stock: number; low: boolean }) {
   if (stock <= 0) return <span className="font-semibold text-destructive">Out of stock</span>;
@@ -67,7 +60,6 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
       </Link>
       <div className="flex flex-1 flex-col gap-1.5 p-4 sm:p-5">
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <span className={cn("rounded-full px-2.5 py-0.5 font-semibold", skillStyles[product.skillLevel])}>{skillNames[product.skillLevel] ?? product.skillLevel}</span>
           {product.brand && <span className="font-medium text-muted-foreground">{product.brand}</span>}
         </div>
         <h3 className="text-[1.05rem] leading-snug font-semibold">

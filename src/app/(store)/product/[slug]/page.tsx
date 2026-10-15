@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Banknote, MessageCircle, RotateCcw, ShieldCheck, Truck } from "lucide-react";
-import { getProductBySlug, getRelatedProducts, skillLabel } from "@/server/catalog";
+import { getProductBySlug, getRelatedProducts } from "@/server/catalog";
 import { getSettings, siteUrl } from "@/lib/settings";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { whatsappLink } from "@/lib/format";
@@ -69,7 +69,6 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
         <div>
           <div className="flex flex-wrap items-center gap-2 text-[0.95rem]">
             {p.brand && <span className="font-semibold">{p.brand}</span>}
-            <span className="rounded-full bg-muted px-3 py-1 font-semibold">{skillLabel(p.skillLevel)} level</span>
             {p.sku && <span className="text-muted-foreground">SKU: {p.sku}</span>}
           </div>
           <h1 className="mt-3 text-3xl font-bold sm:text-4xl">{p.title}</h1>
