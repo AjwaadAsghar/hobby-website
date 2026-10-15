@@ -1,17 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#ffffff"/><stop offset="60%" stop-color="#eef2f7"/><stop offset="100%" stop-color="#c9d4e3"/></radialGradient>
-    <filter id="sh" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#000" flood-opacity=".22"/></filter>
-  </defs>
+  <radialGradient id="bg" cx="50%" cy="38%" r="80%"><stop offset="0" stop-color="#fafafa"/><stop offset=".55" stop-color="#e7e7ea"/><stop offset="1" stop-color="#c9c9cf"/></radialGradient>
+  <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="lift" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000" flood-opacity=".28"/></filter>
+  <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset=".45" stop-color="#d4a017"/><stop offset="1" stop-color="#8a6508"/></linearGradient>
+  <linearGradient id="yellow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde047"/><stop offset=".6" stop-color="#eab308"/><stop offset="1" stop-color="#a16207"/></linearGradient>
+  <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#52525b"/><stop offset=".3" stop-color="#f4f4f5"/><stop offset=".55" stop-color="#a1a1aa"/><stop offset=".8" stop-color="#e4e4e7"/><stop offset="1" stop-color="#3f3f46"/></linearGradient>
+  <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="black" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f3f46"/><stop offset=".5" stop-color="#18181b"/><stop offset="1" stop-color="#09090b"/></linearGradient>
+</defs>
   <rect width="800" height="800" fill="url(#bg)"/>
-  <ellipse cx="400" cy="640" rx="280" ry="26" fill="#000" opacity=".08"/>
-  <g filter="url(#sh)" transform="translate(400 420) rotate(-8) scale(0.92) translate(-400 -420)">
-        <rect x="170" y="290" width="460" height="230" rx="28" fill="#D7261E"/>
-        <rect x="190" y="310" width="420" height="60" rx="12" fill="#18181b" opacity=".85"/>
-        <path d="M410 395 L360 460 L400 460 L380 515 L450 440 L410 440 L430 395Z" fill="#fde047"/>
-        <path d="M630 330 Q690 330 690 390 L690 470" stroke="#18181b" stroke-width="14" fill="none"/>
-        <path d="M630 360 Q670 360 670 410 L670 470" stroke="#dc2626" stroke-width="14" fill="none"/>
-        <rect x="652" y="465" width="56" height="40" rx="6" fill="#facc15"/></g>
-  <text x="400" y="720" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#27272a"></text>
-  
+  <!-- Scaled in so nothing touches the edges (tiles crop the image a little). -->
+  <g transform="translate(400 380) scale(.8) translate(-400 -400)">
+    <ellipse cx="400" cy="575" rx="250" ry="34" fill="#000" opacity=".28" filter="url(#soft)"/>
+    
+    <defs><linearGradient id="label" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ea580c"/><stop offset=".55" stop-color="#f97316"/><stop offset="1" stop-color="#18181b"/></linearGradient></defs>
+    <path d="M600 360 C660 350 680 300 690 270" fill="none" stroke="#dc2626" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M600 360 C660 350 680 300 690 270" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="4" stroke-linecap="round" transform="translate(-1 -4)"/><path d="M600 390 C670 392 700 340 712 290" fill="none" stroke="#18181b" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M600 390 C670 392 700 340 712 290" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="4" stroke-linecap="round" transform="translate(-1 -4)"/>
+    <g transform="translate(640 170)">
+    <path d="M0 6 Q0 0 6 0 H96 L120 18 V62 L96 80 H6 Q0 80 0 74 Z" fill="url(#yellow)"/>
+    <path d="M6 0 H96 L120 18 H10 Z" fill="#fde68a" opacity=".7"/>
+    <rect x="18" y="22" width="22" height="36" rx="6" fill="#a16207" opacity=".35"/>
+    <rect x="62" y="22" width="22" height="36" rx="6" fill="#a16207" opacity=".35"/>
+    <circle cx="120" cy="30" r="7" fill="url(#gold)"/><circle cx="120" cy="52" r="7" fill="url(#gold)"/>
+  </g>
+    <path d="M600 430 C650 440 660 480 690 500" fill="none" stroke="#f4f4f5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M600 430 C650 440 660 480 690 500" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2" stroke-linecap="round" transform="translate(-1 -2)"/><path d="M600 438 C648 450 652 490 680 512" fill="none" stroke="#d4d4d8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M600 438 C648 450 652 490 680 512" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2" stroke-linecap="round" transform="translate(-1 -2)"/>
+    <rect x="672" y="492" width="40" height="30" rx="5" fill="#fafafa" stroke="#a1a1aa" stroke-width="2" transform="rotate(30 692 507)"/>
+    <g filter="url(#lift)">
+      <path d="M190 320 L240 270 H650 L600 320 Z" fill="#3f3f46"/>
+      <path d="M600 320 L650 270 V450 L600 500 Z" fill="#0c0c0e"/>
+      <rect x="190" y="320" width="410" height="180" rx="8" fill="url(#black)"/>
+      <rect x="206" y="342" width="378" height="136" rx="6" fill="url(#label)"/>
+      <rect x="206" y="342" width="378" height="40" rx="6" fill="url(#gloss)"/>
+      <text x="226" y="398" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="900" fill="#fff">5000mAh</text>
+      <text x="226" y="440" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#fff" opacity=".92">2S 7.4V · 50C LiPo</text>
+      <path d="M520 360 L496 410 H520 L506 456 L556 396 H530 L546 360 Z" fill="#fde047"/>
+    </g>
+  </g>
 </svg>

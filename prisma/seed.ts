@@ -10,7 +10,8 @@ import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { storeDefaults } from "../src/config/store";
 import { defaultPages } from "../src/config/default-pages";
-import { comingSoonSvg, placeholderSvg, writePlaceholder } from "./placeholders";
+import { comingSoonSvg, writePlaceholder } from "./placeholders";
+import { categoryArtSvg, type CategoryArt } from "./category-art";
 import { categories, products } from "./catalog-data";
 
 const db = new PrismaClient();
@@ -75,7 +76,7 @@ async function main() {
   // Categories
   const catIds: Record<string, string> = {};
   for (const [i, c] of categories.entries()) {
-    const image = writePlaceholder(`category-${c.slug}.svg`, placeholderSvg({ title: "", shape: c.shape, color: "#D7261E", angle: i }));
+    const image = writePlaceholder(`category-${c.slug}.svg`, categoryArtSvg(c.shape as CategoryArt));
     const cat = await db.category.create({ data: { name: c.name, slug: c.slug, description: c.description, sortOrder: i, image } });
     catIds[c.slug] = cat.id;
   }
