@@ -96,7 +96,7 @@ export type StoreSettings = {
 export const storeDefaults: StoreSettings = {
   branding: {
     storeName: "Hobby Shobby",
-    tagline: "RC cars, planes and drones for every skill level",
+    tagline: "Genuine RC parts, batteries and electronics",
     logoUrl: "",
     faviconUrl: "",
     accentColor: "#D7261E",
