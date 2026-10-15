@@ -27,22 +27,24 @@ export function MobileMenu({ categories }: { categories: Cat[] }) {
         <SheetHeader className="border-b px-5 py-4">
           <SheetTitle className="text-xl">Menu</SheetTitle>
         </SheetHeader>
-        <nav aria-label="Categories" className="px-2 py-3">
-          <p className="px-3 pb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">Shop by category</p>
-          <ul>
-            <li>
-              <Link href="/shop" onClick={close} className="flex items-center justify-between rounded-xl px-3 py-3.5 text-lg font-semibold hover:bg-muted">
-                All products <ChevronRight className="size-5" aria-hidden />
-              </Link>
-            </li>
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <Link href={`/category/${c.slug}`} onClick={close} className="flex items-center justify-between rounded-xl px-3 py-3.5 text-lg hover:bg-muted">
-                  {c.name} <ChevronRight className="size-5" aria-hidden />
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <nav aria-label="Menu" className="px-2 py-3">
+          <Link href="/shop" onClick={close} className="flex items-center justify-between rounded-xl px-3 py-3.5 text-lg font-semibold hover:bg-muted">
+            Shop now <ChevronRight className="size-5" aria-hidden />
+          </Link>
+          {categories.length > 0 && (
+            <>
+              <p className="mt-4 px-3 pb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">Categories</p>
+              <ul>
+                {categories.map((c) => (
+                  <li key={c.slug}>
+                    <Link href={`/category/${c.slug}`} onClick={close} className="flex items-center justify-between rounded-xl px-3 py-3.5 text-lg hover:bg-muted">
+                      {c.name} <ChevronRight className="size-5" aria-hidden />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
           <p className="mt-4 px-3 pb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">Help</p>
           <ul>
             {[

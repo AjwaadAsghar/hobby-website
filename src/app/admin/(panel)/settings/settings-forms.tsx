@@ -283,9 +283,8 @@ export function NotificationsForm({ initial }: { initial: StoreSettings["notific
 
 // ---------------------------------------------------------------------------
 
-export function HomepageForm({ initial, products }: { initial: StoreSettings["homepage"]; products: { id: string; title: string }[] }) {
+export function HomepageForm({ initial }: { initial: StoreSettings["homepage"] }) {
   const [v, setV] = useState(initial);
-  const [filter, setFilter] = useState("");
   const { pending, errors, save } = useSaver("homepage");
   return (
     <form
@@ -300,7 +299,7 @@ export function HomepageForm({ initial, products }: { initial: StoreSettings["ho
         <TextField label="Text under the headline" value={v.heroSubtitle} onChange={(heroSubtitle) => setV({ ...v, heroSubtitle })} multiline />
         <div className="grid gap-4 sm:grid-cols-2">
           <TextField label="Button text" value={v.heroCtaLabel} onChange={(heroCtaLabel) => setV({ ...v, heroCtaLabel })} />
-          <TextField label="Button link" value={v.heroCtaHref} onChange={(heroCtaHref) => setV({ ...v, heroCtaHref })} hint="e.g. /shop or /category/drones" />
+          <TextField label="Button link" value={v.heroCtaHref} onChange={(heroCtaHref) => setV({ ...v, heroCtaHref })} hint="e.g. #products (scrolls to the product list) or /shop" />
         </div>
       </Card>
 
@@ -323,43 +322,6 @@ export function HomepageForm({ initial, products }: { initial: StoreSettings["ho
           <button type="button" onClick={() => setV({ ...v, banners: [...v.banners, { title: "", subtitle: "", ctaLabel: "Shop now", ctaHref: "/shop", image: "" }] })} className="inline-flex h-11 items-center gap-1 rounded-xl border-2 border-input px-4 font-semibold hover:bg-muted">
             <Plus className="size-4" aria-hidden /> Add banner
           </button>
-        )}
-      </Card>
-
-      <Card title="Featured products" description="Pick products in the order you want them shown. If none are picked, products marked “Featured” are shown.">
-        {v.featuredProductIds.length > 0 && (
-          <ol className="space-y-2">
-            {v.featuredProductIds.map((id, i) => (
-              <li key={id} className="flex items-center gap-2 rounded-xl border px-3 py-2">
-                <span className="w-6 font-bold">{i + 1}.</span>
-                <span className="flex-1">{products.find((p) => p.id === id)?.title ?? "Deleted product"}</span>
-                <button type="button" disabled={i === 0} onClick={() => { const a = [...v.featuredProductIds]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; setV({ ...v, featuredProductIds: a }); }} className="h-9 rounded-lg border px-2 text-sm disabled:opacity-30" aria-label="Move up">
-                  ↑
-                </button>
-                <button type="button" disabled={i === v.featuredProductIds.length - 1} onClick={() => { const a = [...v.featuredProductIds]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; setV({ ...v, featuredProductIds: a }); }} className="h-9 rounded-lg border px-2 text-sm disabled:opacity-30" aria-label="Move down">
-                  ↓
-                </button>
-                <button type="button" onClick={() => setV({ ...v, featuredProductIds: v.featuredProductIds.filter((x) => x !== id) })} className="h-9 rounded-lg px-2 text-sm text-destructive" aria-label="Remove from featured">
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ol>
-        )}
-        <input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Find a product to add…" aria-label="Find a product to add" className="h-11 w-full rounded-xl border-2 border-input bg-background px-3" />
-        {filter && (
-          <ul className="max-h-56 overflow-y-auto rounded-xl border">
-            {products
-              .filter((p) => !v.featuredProductIds.includes(p.id) && p.title.toLowerCase().includes(filter.toLowerCase()))
-              .slice(0, 20)
-              .map((p) => (
-                <li key={p.id}>
-                  <button type="button" onClick={() => setV({ ...v, featuredProductIds: [...v.featuredProductIds, p.id] })} className="w-full px-3 py-2 text-left hover:bg-muted">
-                    + {p.title}
-                  </button>
-                </li>
-              ))}
-          </ul>
         )}
       </Card>
 

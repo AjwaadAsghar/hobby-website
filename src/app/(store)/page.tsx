@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Banknote, Headset, ShieldCheck, Star, Truck } from "lucide-react";
 import { getSettings, siteUrl } from "@/lib/settings";
-import { getActiveCategories, getBestSellers, getFeaturedProducts, getNewArrivals } from "@/server/catalog";
+import { getActiveCategories } from "@/server/catalog";
 import { HeroPlanes } from "@/components/store/hero-planes";
-import { ProductGrid } from "@/components/store/product-card";
 import { CategoryTile } from "@/components/store/category-tile";
 import { NewsletterForm } from "@/components/store/newsletter-form";
 import { Reveal } from "@/components/motion/reveal";
@@ -12,22 +11,6 @@ import { ProductImage } from "@/components/store/product-image";
 import { Button } from "@/components/ui/button";
 
 const badgeIcons = [Truck, Banknote, ShieldCheck, Headset];
-
-function SectionHeading({ eyebrow, title, href, linkLabel }: { eyebrow?: string; title: string; href?: string; linkLabel?: string }) {
-  return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        {eyebrow && <p className="mb-2 font-semibold tracking-wide text-brand-text uppercase">{eyebrow}</p>}
-        <h2 className="text-3xl font-bold sm:text-4xl">{title}</h2>
-      </div>
-      {href && (
-        <Link href={href} className="inline-flex items-center gap-2 rounded-full border-2 border-foreground px-5 py-2.5 font-semibold transition hover:bg-foreground hover:text-background">
-          {linkLabel ?? "View all"} <ArrowRight className="size-4" aria-hidden />
-        </Link>
-      )}
-    </div>
-  );
-}
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -60,12 +43,7 @@ function homeJsonLd(s: Awaited<ReturnType<typeof getSettings>>) {
 
 export default async function HomePage() {
   const s = await getSettings();
-  const [categories, featured, newArrivals, bestSellers] = await Promise.all([
-    getActiveCategories(),
-    getFeaturedProducts(s.homepage.featuredProductIds, 8),
-    getNewArrivals(4),
-    getBestSellers(4),
-  ]);
+  const categories = await getActiveCategories();
 
   return (
     <>
@@ -92,9 +70,6 @@ export default async function HomePage() {
                 {s.homepage.heroCtaLabel || "Shop now"} <ArrowRight aria-hidden />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-2 border-zinc-900 bg-transparent text-zinc-900 hover:bg-zinc-900 hover:text-white dark:border-white/80 dark:text-white dark:hover:bg-white dark:hover:text-zinc-950">
-              <Link href="/shop?sort=price-asc">Lowest prices first</Link>
-            </Button>
           </div>
         </div>
       </section>
@@ -119,17 +94,17 @@ export default async function HomePage() {
         </ul>
       </section>
 
-      {/* Categories */}
-      <section className="container-store py-16 sm:py-20" aria-labelledby="shop-by-category">
-        <Reveal>
-          <div className="mb-8">
-            <p className="mb-2 font-semibold tracking-wide text-brand-text uppercase">Browse</p>
-            <h2 id="shop-by-category" className="text-3xl font-bold sm:text-4xl">
-              Shop by category
-            </h2>
-          </div>
-        </Reveal>
-        <ul className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-3">
+      {/* Categories: the "Shop now" button scrolls here (#products). */}
+      <section id="products" className="container-store scroll-mt-4 py-16 sm:py-20" aria-labelledby="shop-by-category">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <h2 id="shop-by-category" className="text-3xl font-bold sm:text-4xl">
+            Shop by category
+          </h2>
+          <Link href="/shop" className="inline-flex items-center gap-2 rounded-full border-2 border-foreground px-5 py-2.5 font-semibold transition hover:bg-foreground hover:text-background">
+            All products <ArrowRight className="size-4" aria-hidden />
+          </Link>
+        </div>
+        <ul className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
           {categories.map((c, i) => (
             <li key={c.id}>
               <Reveal delay={Math.min(i, 5) * 0.05}>
@@ -139,16 +114,6 @@ export default async function HomePage() {
           ))}
         </ul>
       </section>
-
-      {/* Featured */}
-      {featured.length > 0 && (
-        <section className="container-store py-8" aria-label="Featured products">
-          <Reveal>
-            <SectionHeading eyebrow="Hand-picked" title="Featured products" href="/shop" linkLabel="Shop all" />
-          </Reveal>
-          <ProductGrid products={featured} />
-        </section>
-      )}
 
       {/* Banners from settings */}
       {s.homepage.banners.length > 0 && (
@@ -172,57 +137,6 @@ export default async function HomePage() {
               </Link>
             </Reveal>
           ))}
-        </section>
-      )}
-
-      {/* Skill level guide */}
-      <section className="container-store py-16" aria-labelledby="skill-guide">
-        <div className="rounded-[2rem] bg-zinc-950 px-6 py-12 text-white sm:px-12">
-          <Reveal>
-            <p className="mb-2 font-semibold tracking-wide text-white/80 uppercase">Not sure where to start?</p>
-            <h2 id="skill-guide" className="max-w-2xl text-3xl font-bold sm:text-4xl">
-              Pick your experience level and we will show you the right models
-            </h2>
-          </Reveal>
-          <ul className="mt-10 grid gap-4 md:grid-cols-3">
-            {[
-              { value: "BEGINNER", title: "Beginner", text: "Ready to run, easy to control, tough enough to survive a few crashes." },
-              { value: "INTERMEDIATE", title: "Intermediate", text: "More speed and more control once you know the basics." },
-              { value: "EXPERT", title: "Expert", text: "Kits, FPV and full-power machines for experienced hobbyists." },
-            ].map((l, i) => (
-              <li key={l.value}>
-                <Reveal delay={i * 0.08}>
-                  <Link href={`/shop?skill=${l.value}`} className="group flex h-full flex-col rounded-2xl border border-white/15 bg-white/5 p-6 transition hover:border-white/40 hover:bg-white/10">
-                    <span className="text-2xl font-bold">{l.title}</span>
-                    <span className="mt-2 text-white/85">{l.text}</span>
-                    <span className="mt-6 inline-flex items-center gap-2 font-semibold">
-                      Show {l.title.toLowerCase()} models <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden />
-                    </span>
-                  </Link>
-                </Reveal>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* New arrivals */}
-      {newArrivals.length > 0 && (
-        <section className="container-store py-8" aria-label="New arrivals">
-          <Reveal>
-            <SectionHeading eyebrow="Just landed" title="New arrivals" href="/shop?sort=newest" />
-          </Reveal>
-          <ProductGrid products={newArrivals} />
-        </section>
-      )}
-
-      {/* Best sellers */}
-      {bestSellers.length > 0 && (
-        <section className="container-store py-16" aria-label="Best sellers">
-          <Reveal>
-            <SectionHeading eyebrow="Customer favourites" title="Best sellers" href="/shop?sort=best-selling" />
-          </Reveal>
-          <ProductGrid products={bestSellers} />
         </section>
       )}
 

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { requireAdminPage } from "@/lib/auth-helpers";
 import { getSettings } from "@/lib/settings";
-import { db } from "@/lib/db";
 import { PageHeader } from "@/components/admin/admin-shell";
 import { BrandingForm, CommerceForm, ContactForm, HomepageForm, NotificationsForm, PaymentsForm } from "./settings-forms";
 import { cn } from "@/lib/utils";
@@ -22,7 +21,6 @@ export default async function SettingsPage({ searchParams }: PageProps<"/admin/s
   const sp = await searchParams;
   const tab = tabs.find((t) => t.id === sp.tab)?.id ?? "branding";
   const s = await getSettings();
-  const products = tab === "homepage" ? await db.product.findMany({ where: { status: "PUBLISHED" }, orderBy: { title: "asc" }, select: { id: true, title: true } }) : [];
 
   return (
     <div className="max-w-4xl">
@@ -52,7 +50,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/admin/s
       {tab === "store" && <CommerceForm initial={s.commerce} />}
       {tab === "payments" && <PaymentsForm initial={s.payments} />}
       {tab === "notifications" && <NotificationsForm initial={s.notifications} />}
-      {tab === "homepage" && <HomepageForm initial={s.homepage} products={products} />}
+      {tab === "homepage" && <HomepageForm initial={s.homepage} />}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone, User, PackageSearch } from "lucide-react";
+import { Phone, User, PackageSearch, ShoppingBag } from "lucide-react";
 import { getSettings } from "@/lib/settings";
 import { getActiveCategories } from "@/server/catalog";
 import { formatMoney } from "@/lib/money";
@@ -55,6 +55,13 @@ export async function Header() {
           </Link>
           <SearchBar className="hidden max-w-2xl flex-1 lg:block" />
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
+            <Link
+              href="/shop"
+              className="hidden h-12 items-center gap-2 rounded-full px-4 font-semibold hover:bg-muted sm:inline-flex lg:hidden"
+            >
+              <ShoppingBag className="size-5" aria-hidden />
+              Shop now
+            </Link>
             <Link
               href="/account"
               className="hidden h-12 items-center gap-2 rounded-full px-4 font-semibold hover:bg-muted sm:inline-flex"

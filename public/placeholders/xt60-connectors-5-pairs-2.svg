@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="XT60 Connectors (5 pairs) – photo coming soon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7f7f8"/><stop offset="100%" stop-color="#ececef"/></linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="#d4d4d8"/></pattern>
+    <filter id="ghost"><feColorMatrix type="matrix" values="0 0 0 0 0.63  0 0 0 0 0.63  0 0 0 0 0.67  0 0 0 1 0"/></filter>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <rect width="800" height="800" fill="url(#dots)" opacity=".7"/>
+  <g filter="url(#ghost)" opacity=".42" transform="translate(400 320) scale(.6) translate(-400 -420)">
+        <g stroke-width="22" stroke-linecap="round"><path d="M110 380 H250" stroke="#dc2626"/><path d="M110 460 H250" stroke="#18181b"/><path d="M550 380 H690" stroke="#dc2626"/><path d="M550 460 H690" stroke="#18181b"/></g>
+        <path d="M240 340 H360 L380 370 V470 L360 500 H240 Z" fill="#000"/>
+        <path d="M560 340 H440 L420 370 V470 L440 500 H560 Z" fill="#000"/>
+        <rect x="380" y="382" width="40" height="18" rx="6" fill="#d4a017"/><rect x="380" y="440" width="40" height="18" rx="6" fill="#d4a017"/></g>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <rect x="130" y="500" width="540" height="92" rx="46" fill="#ffffff" stroke="#d4d4d8" stroke-width="3"/>
+    <text x="400" y="561" font-size="44" font-weight="700" fill="#3f3f46">Photo coming soon</text>
+    <text x="400" y="662" font-size="38" font-weight="700" letter-spacing="4" fill="#71717a">AMASS</text>
+    <text x="400" y="714" font-size="30" fill="#a1a1aa">Side view</text>
+  </g>
+</svg>

@@ -7,10 +7,14 @@
   <rect width="800" height="800" fill="url(#bg)"/>
   <rect width="800" height="800" fill="url(#dots)" opacity=".7"/>
   <g filter="url(#ghost)" opacity=".42" transform="translate(400 320) scale(.6) translate(-400 -420)">
-        <circle cx="330" cy="400" r="140" fill="none" stroke="#000" stroke-width="60" stroke-dasharray="34 22"/>
-        <circle cx="330" cy="400" r="100" fill="#000"/><circle cx="330" cy="400" r="34" fill="#e4e4e7"/>
-        <circle cx="560" cy="470" r="80" fill="none" stroke="#3f3f46" stroke-width="40" stroke-dasharray="22 16"/>
-        <circle cx="560" cy="470" r="55" fill="#3f3f46"/><circle cx="560" cy="470" r="20" fill="#e4e4e7"/></g>
+        <g stroke-linecap="round" fill="none" stroke-width="16">
+          <path d="M240 390 Q170 380 120 330" stroke="#18181b"/><path d="M240 420 Q160 420 110 420" stroke="#000"/><path d="M240 450 Q170 460 120 510" stroke="#fbbf24"/>
+          <path d="M560 395 Q640 390 690 350" stroke="#dc2626"/><path d="M560 445 Q640 450 690 490" stroke="#18181b"/>
+        </g>
+        <rect x="230" y="340" width="340" height="160" rx="30" fill="#000"/>
+        <rect x="270" y="372" width="160" height="22" rx="8" fill="#fff" opacity=".85"/>
+        <rect x="270" y="410" width="110" height="14" rx="6" fill="#fff" opacity=".5"/>
+        <path d="M455 360 v120 M485 360 v120 M515 360 v120" stroke="#18181b" stroke-width="10" opacity=".35"/></g>
   <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
     <rect x="130" y="500" width="540" height="92" rx="46" fill="#ffffff" stroke="#d4d4d8" stroke-width="3"/>
     <text x="400" y="561" font-size="44" font-weight="700" fill="#3f3f46">Photo coming soon</text>

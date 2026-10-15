@@ -158,8 +158,8 @@ export const storeDefaults: StoreSettings = {
     heroTitle: "Hobby Products at prices that beat the market.",
     heroSubtitle:
       "RC cars, planes, drones, parts and batteries at competitive prices. Every product is 100% genuine and delivered fast anywhere in Pakistan.",
-    heroCtaLabel: "Shop all products",
-    heroCtaHref: "/shop",
+    heroCtaLabel: "Shop now",
+    heroCtaHref: "#products",
     banners: [],
     featuredProductIds: [],
     testimonials: [

@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-export type Shape = "car" | "truck" | "crawler" | "plane" | "drone" | "heli" | "boat" | "parts" | "battery" | "charger" | "radio" | "accessory";
+export type Shape = "car" | "truck" | "crawler" | "plane" | "drone" | "heli" | "boat" | "parts" | "battery" | "charger" | "radio" | "accessory" | "esc" | "motor" | "servo" | "plug" | "propeller";
 
 const palettes: [string, string][] = [
   ["#f4f4f5", "#d4d4d8"],
@@ -111,6 +111,45 @@ function shapeSvg(shape: Shape, color: string): string {
         <circle cx="290" cy="500" r="52" fill="${dark}"/><rect x="282" y="430" width="16" height="70" rx="8" fill="#a1a1aa"/>
         <circle cx="510" cy="500" r="52" fill="${dark}"/><rect x="502" y="430" width="16" height="70" rx="8" fill="#a1a1aa"/>
         <rect x="392" y="140" width="16" height="160" rx="8" fill="${mid}"/>`;
+    case "esc":
+      return `
+        <g stroke-linecap="round" fill="none" stroke-width="16">
+          <path d="M240 390 Q170 380 120 330" stroke="#18181b"/><path d="M240 420 Q160 420 110 420" stroke="${color}"/><path d="M240 450 Q170 460 120 510" stroke="#fbbf24"/>
+          <path d="M560 395 Q640 390 690 350" stroke="#dc2626"/><path d="M560 445 Q640 450 690 490" stroke="#18181b"/>
+        </g>
+        <rect x="230" y="340" width="340" height="160" rx="30" fill="${color}"/>
+        <rect x="270" y="372" width="160" height="22" rx="8" fill="#fff" opacity=".85"/>
+        <rect x="270" y="410" width="110" height="14" rx="6" fill="#fff" opacity=".5"/>
+        <path d="M455 360 v120 M485 360 v120 M515 360 v120" stroke="${dark}" stroke-width="10" opacity=".35"/>`;
+    case "motor":
+      return `
+        <rect x="392" y="200" width="16" height="90" rx="6" fill="#a1a1aa"/>
+        <rect x="270" y="270" width="260" height="230" rx="34" fill="${color}"/>
+        <path d="M300 300 v170 M340 300 v170 M380 300 v170 M420 300 v170 M460 300 v170 M500 300 v170" stroke="${dark}" stroke-width="12" opacity=".3"/>
+        <rect x="250" y="490" width="300" height="34" rx="12" fill="${mid}"/>
+        <g stroke-width="12" stroke-linecap="round" fill="none"><path d="M330 524 q-10 70 -60 100" stroke="${dark}"/><path d="M400 524 v100" stroke="${color}"/><path d="M470 524 q10 70 60 100" stroke="#fbbf24"/></g>`;
+    case "servo":
+      return `
+        <rect x="210" y="360" width="380" height="36" rx="10" fill="${mid}"/>
+        <circle cx="240" cy="378" r="9" fill="#e4e4e7"/><circle cx="560" cy="378" r="9" fill="#e4e4e7"/>
+        <rect x="260" y="290" width="280" height="250" rx="24" fill="${color}"/>
+        <circle cx="340" cy="280" r="44" fill="${dark}"/><circle cx="340" cy="280" r="18" fill="#a1a1aa"/>
+        <rect x="320" y="210" width="40" height="130" rx="18" fill="#e4e4e7" transform="rotate(-35 340 280)"/>
+        <circle cx="340" cy="280" r="10" fill="${mid}"/>
+        <path d="M540 470 q80 10 120 70" stroke="${dark}" stroke-width="14" fill="none" stroke-linecap="round"/>`;
+    case "plug":
+      return `
+        <g stroke-width="22" stroke-linecap="round"><path d="M110 380 H250" stroke="#dc2626"/><path d="M110 460 H250" stroke="${dark}"/><path d="M550 380 H690" stroke="#dc2626"/><path d="M550 460 H690" stroke="${dark}"/></g>
+        <path d="M240 340 H360 L380 370 V470 L360 500 H240 Z" fill="${color}"/>
+        <path d="M560 340 H440 L420 370 V470 L440 500 H560 Z" fill="${color}"/>
+        <rect x="380" y="382" width="40" height="18" rx="6" fill="#d4a017"/><rect x="380" y="440" width="40" height="18" rx="6" fill="#d4a017"/>`;
+    case "propeller":
+      return `
+        <g transform="rotate(-18 400 420)">
+          <path d="M400 405 C520 360 640 350 700 395 C660 430 540 440 400 435 Z" fill="${color}"/>
+          <path d="M400 405 C280 380 160 390 100 445 C160 470 280 460 400 435 Z" fill="${color}" opacity=".85"/>
+        </g>
+        <circle cx="400" cy="420" r="46" fill="${mid}"/><circle cx="400" cy="420" r="16" fill="#e4e4e7"/>`;
     case "accessory":
     default:
       return `

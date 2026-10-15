@@ -44,7 +44,7 @@ export async function Footer() {
         <nav aria-label="Shop" className="lg:col-span-2">
           <h2 className="text-lg font-semibold text-white">Shop</h2>
           <ul className="mt-4 space-y-2.5 text-zinc-300">
-            <li><Link href="/shop" className="hover:text-white hover:underline">All products</Link></li>
+            <li><Link href="/shop" className="hover:text-white hover:underline">Shop now</Link></li>
             {categories.map((c) => (
               <li key={c.id}>
                 <Link href={`/category/${c.slug}`} className="hover:text-white hover:underline">
