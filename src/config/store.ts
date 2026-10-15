@@ -117,7 +117,7 @@ export const storeDefaults: StoreSettings = {
   commerce: {
     currency: "PKR",
     locale: "en-PK",
-    freeShippingThreshold: 15000_00,
+    freeShippingThreshold: 10000_00,
     lowStockDefault: 3,
   },
   payments: {

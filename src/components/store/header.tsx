@@ -22,7 +22,7 @@ export async function Header() {
       <a href="#main" className="skip-link">
         Skip to main content
       </a>
-      <div className="bg-foreground text-background">
+      <div className="border-b border-white/10 bg-zinc-950 text-white">
         <div className="container-store flex min-h-10 flex-wrap items-center justify-between gap-x-6 gap-y-1 py-1.5 text-sm">
           <p className="font-medium">
             {threshold > 0 ? (
@@ -33,7 +33,7 @@ export async function Header() {
           </p>
           <div className="flex items-center gap-4">
             <TextSizeToggle className="hidden lg:flex" />
-            <ThemeToggle className="hidden text-background hover:bg-white/15 lg:inline-flex" />
+            <ThemeToggle className="hidden text-white hover:bg-white/15 lg:inline-flex" />
             {s.contact.phone && (
               <a href={telLink(s.contact.phone)} className="inline-flex items-center gap-1.5 font-medium hover:underline">
                 <Phone className="size-4" aria-hidden />
