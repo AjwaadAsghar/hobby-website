@@ -43,7 +43,12 @@ export async function testIntegration(service: string): Promise<TestResult> {
       break;
     }
     case "resend": {
-      const to = s.notifications.ownerEmail || admin.email;
+      // An admin may sign in with a username (no @), which is not an address to send to.
+      const to = s.notifications.ownerEmail || (admin.email.includes("@") ? admin.email : "");
+      if (!to) {
+        result = { ok: false, message: "Set an owner email in Settings → Notifications first, then test again." };
+        break;
+      }
       await sendEmail({
         to,
         subject: `Test email from ${s.branding.storeName}`,

@@ -1,5 +1,6 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { isValidLoginName } from "@/lib/login-name";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { authConfig } from "@/auth.config";
@@ -11,7 +12,7 @@ class TooManyAttempts extends CredentialsSignin {
 }
 
 const credentialsSchema = z.object({
-  email: z.string().trim().toLowerCase().email(),
+  email: z.string().trim().toLowerCase().min(3).max(254).refine(isValidLoginName),
   password: z.string().min(1).max(200),
 });
 

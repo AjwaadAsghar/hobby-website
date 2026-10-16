@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdminPage } from "@/lib/auth-helpers";
 import { PasswordForm } from "./password-form";
+import { LoginNameForm } from "./login-name-form";
 
 export const metadata: Metadata = { title: "Change password", robots: { index: false } };
 
@@ -17,6 +18,10 @@ export default async function ChangePasswordPage() {
             : `Signed in as ${user.email}.`}
         </p>
         <PasswordForm />
+        <div className="mt-10 border-t pt-8">
+          <h2 className="mb-4 text-xl font-bold">Your sign-in name</h2>
+          <LoginNameForm current={user.email} />
+        </div>
         {!user.mustChangePassword && (
           <Link href="/admin" className="mt-6 inline-block font-semibold underline underline-offset-4">
             ← Back to dashboard

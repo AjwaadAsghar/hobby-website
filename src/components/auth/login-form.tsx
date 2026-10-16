@@ -20,13 +20,15 @@ export function LoginForm({ area, next }: { area: "admin" | "account"; next?: st
       )}
       <div>
         <label htmlFor={`${area}-email`} className="mb-1.5 block text-lg font-semibold">
-          Email
+          {area === "admin" ? "Username or email" : "Email"}
         </label>
         <input
           id={`${area}-email`}
           name="email"
-          type="email"
-          autoComplete="email"
+          type={area === "admin" ? "text" : "email"}
+          autoComplete={area === "admin" ? "username" : "email"}
+          autoCapitalize="none"
+          spellCheck={false}
           defaultValue={state.values?.email ?? ""}
           key={state.values?.email ?? "email"}
           required

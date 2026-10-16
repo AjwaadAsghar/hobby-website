@@ -140,7 +140,7 @@ export function AdminShell({
           </p>
           <div className="mt-2 flex gap-1">
             <Link href="/admin/change-password" className="flex-1 rounded-lg px-2 py-2 text-center text-sm font-medium hover:bg-sidebar-accent">
-              Password
+              Login &amp; password
             </Link>
             <form action={logoutAction} className="flex-1">
               <input type="hidden" name="area" value="admin" />

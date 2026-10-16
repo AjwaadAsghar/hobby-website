@@ -8,6 +8,7 @@ import { z } from "zod";
 import { signIn, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { USERNAME_RE } from "@/lib/login-name";
 
 export type FormState = { error?: string; fieldErrors?: Record<string, string>; ok?: boolean; values?: Record<string, string> };
 
@@ -21,7 +22,11 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
   const fieldErrors: Record<string, string> = {};
-  if (!z.string().email().safeParse(email).success) fieldErrors.email = "Please enter your email address, for example name@example.com.";
+  // Admins may sign in with a username (no @); customers always use their email.
+  const validLogin = z.string().email().safeParse(email).success || (area === "admin" && USERNAME_RE.test(email));
+  if (!validLogin) {
+    fieldErrors.email = area === "admin" ? "Please enter your username or email address." : "Please enter your email address, for example name@example.com.";
+  }
   if (!password) fieldErrors.password = "Please enter your password.";
   const values = { email };
   if (Object.keys(fieldErrors).length) return { fieldErrors, values };
@@ -37,7 +42,7 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
     if (err instanceof AuthError) {
       const code = (err as AuthError & { code?: string }).code;
       if (code === "rate_limited") return { error: "Too many sign-in attempts. Please wait 15 minutes and try again.", values };
-      return { error: "That email and password do not match. Please check and try again.", values };
+      return { error: area === "admin" ? "That username or email and password do not match. Please check and try again." : "That email and password do not match. Please check and try again.", values };
     }
     throw err;
   }
