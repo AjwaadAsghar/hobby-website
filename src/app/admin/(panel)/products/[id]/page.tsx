@@ -7,6 +7,9 @@ import { loadFormContext, productToForm } from "../form-data";
 import { deleteProduct, duplicateProduct } from "../actions";
 import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 
+// Saving a product (photos, variants, compatible parts) gets more time than the default.
+export const maxDuration = 60;
+
 export const metadata = { title: "Edit product" };
 
 export default async function EditProductPage({ params, searchParams }: PageProps<"/admin/products/[id]">) {

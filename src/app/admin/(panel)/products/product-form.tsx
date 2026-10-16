@@ -107,7 +107,13 @@ export function ProductForm({
       } catch (err) {
         // Network drop, server timeout or a crash on the server: keep the form and say so.
         console.error(err);
-        toast.error("Could not reach the server to save. Your changes are still here - please try again.");
+        const detail = (err as Error)?.message ?? "";
+        toast.error(
+          /Server Action/i.test(detail)
+            ? "The site was updated since you opened this page. Copy anything you typed, refresh the page (F5), and save again."
+            : `Could not reach the server to save. Your changes are still here - please try again.${detail ? ` (${detail.slice(0, 160)})` : ""}`,
+          { duration: 15_000 },
+        );
         return;
       }
       if (res.ok && res.id) {

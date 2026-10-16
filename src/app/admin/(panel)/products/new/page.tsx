@@ -4,6 +4,9 @@ import { PageHeader } from "@/components/admin/admin-shell";
 import { ProductForm } from "../product-form";
 import { emptyProduct, loadFormContext } from "../form-data";
 
+// Saving a product (photos, variants, compatible parts) gets more time than the default.
+export const maxDuration = 60;
+
 export const metadata = { title: "Add product" };
 
 export default async function NewProductPage() {

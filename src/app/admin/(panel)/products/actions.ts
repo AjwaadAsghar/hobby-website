@@ -31,7 +31,11 @@ async function uniqueSlug(base: string, excludeId?: string) {
 }
 
 export async function saveProduct(json: string): Promise<SaveResult> {
-  await requireAdmin();
+  try {
+    await requireAdmin();
+  } catch (err) {
+    return { error: (err as Error).message || "Please sign in again." };
+  }
   let raw: unknown;
   try {
     raw = JSON.parse(json);
