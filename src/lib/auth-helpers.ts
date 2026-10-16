@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -13,14 +14,17 @@ export class AuthError extends Error {
   }
 }
 
-/** Loads the signed-in admin from the DB (so deactivated users lose access immediately). */
-export async function getAdmin() {
+/**
+ * Loads the signed-in admin from the DB (so deactivated users lose access
+ * immediately). Cached per request: the layout and the page share one lookup.
+ */
+export const getAdmin = cache(async () => {
   const session = await auth();
   if (!session?.user?.id) return null;
   const user = await db.user.findUnique({ where: { id: session.user.id } });
   if (!user || !user.isActive || (user.role !== "OWNER" && user.role !== "STAFF")) return null;
   return user;
-}
+});
 
 /** For admin pages: redirects when not allowed. */
 export async function requireAdminPage(roles: AdminRole[] = ["OWNER", "STAFF"]) {

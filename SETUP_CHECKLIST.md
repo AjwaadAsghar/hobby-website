@@ -6,12 +6,14 @@ Work through this list from top to bottom. Each step takes 5–10 minutes and ev
 
 1. Sign up at <https://supabase.com> and create a project. Choose the region closest to your customers (e.g. Mumbai or Singapore) and a database password made of **letters and numbers only**.
 2. Click **Connect** (top bar) → **ORM** → **Prisma**. Copy the two lines it shows and replace `[YOUR-PASSWORD]` in both:
-   - **`DATABASE_URL`**: the pooled one (port **6543**). Make it end with `?pgbouncer=true&connection_limit=1`.
+   - **`DATABASE_URL`**: the pooled one (port **6543**). Make it end with `?pgbouncer=true&connection_limit=5`.
    - **`DIRECT_URL`**: the session one (port **5432**). It's only used to create and update tables.
 
    No ORM tab? Under **Direct → Connection string**, the **Transaction pooler** is `DATABASE_URL` and the **Session pooler** is `DIRECT_URL`. Don't use "Direct connection"; Vercel can't reach it.
 
 The code switches from the local database to PostgreSQL automatically. You don't need to edit anything.
+
+**Region:** `vercel.json` runs the site in Tokyo (`hnd1`) to sit next to a Supabase project in Tokyo. If your Supabase project is in another region, change it to the nearest Vercel region (e.g. `bom1` Mumbai, `sin1` Singapore, `fra1` Frankfurt). A far-away database makes every page slow.
 
 ## 2. File uploads — Supabase Storage (required on Vercel)
 
