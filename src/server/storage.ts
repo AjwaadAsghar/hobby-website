@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { v2 as cloudinary } from "cloudinary";
 import { integrations, logIntegration } from "@/server/integration-log";
+import { PRIVATE_BUCKET, PUBLIC_BUCKET, supabasePublicUrl, supabaseUpload } from "@/server/supabase-storage";
 
 /** Local fallback folder (served by src/app/media/[...path]/route.ts). */
 export const LOCAL_UPLOAD_DIR = path.join(process.cwd(), "uploads");
@@ -27,8 +28,10 @@ function detectType(buf: Buffer): { ext: string; mime: string; kind: UploadKind 
 }
 
 /**
- * Saves an upload to Cloudinary when it is configured, otherwise to
- * the local uploads/ folder (fine locally; on Vercel use Cloudinary - disk is temporary).
+ * Saves an upload to Cloudinary or Supabase Storage when one is configured,
+ * otherwise to the local uploads/ folder (fine locally; on Vercel the disk is
+ * temporary, so use one of the two). Payment screenshots in Supabase go to a
+ * private bucket and are served to admins only through /media/payment-proofs/…
  */
 export async function storeUpload(file: File, opts: { folder: string; kind: UploadKind }): Promise<{ url: string }> {
   if (!file || typeof file.arrayBuffer !== "function") throw new UploadError("No file was received.");
@@ -58,10 +61,22 @@ export async function storeUpload(file: File, opts: { folder: string; kind: Uplo
         );
         stream.end(buf);
       });
-      await logIntegration("cloudinary", "OK", `Uploaded ${folder}/${name}.${type.ext}`);
+      await logIntegration("storage", "OK", `Uploaded ${folder}/${name}.${type.ext} to Cloudinary`);
       return { url: result.secure_url };
     } catch (err) {
-      await logIntegration("cloudinary", "FAILED", `Upload failed, saving locally instead: ${(err as Error).message}`);
+      await logIntegration("storage", "FAILED", `Cloudinary upload failed, trying the next option: ${(err as Error).message}`);
+    }
+  }
+
+  if (integrations.supabase()) {
+    const objectPath = `${folder}/${name}.${type.ext}`;
+    const isPrivate = folder === "payment-proofs";
+    try {
+      await supabaseUpload(isPrivate ? PRIVATE_BUCKET : PUBLIC_BUCKET, objectPath, buf, type.mime);
+      await logIntegration("storage", "OK", `Uploaded ${objectPath} to Supabase Storage`);
+      return { url: isPrivate ? `/media/${objectPath}` : supabasePublicUrl(objectPath) };
+    } catch (err) {
+      await logIntegration("storage", "FAILED", `Supabase upload failed, saving locally instead: ${(err as Error).message}`);
     }
   }
 

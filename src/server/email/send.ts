@@ -48,9 +48,12 @@ export async function sendEmail(opts: { to: string; subject: string; react: Reac
   try {
     const s = await getSettings();
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const fromAddress = process.env.EMAIL_FROM || "onboarding@resend.dev";
+    // EMAIL_FROM can be just an address ("orders@shop.pk", shown with the store
+    // name) or a full sender with its own name ("Hobby Shobby Orders <orders@shop.pk>").
+    const fromAddress = (process.env.EMAIL_FROM || "onboarding@resend.dev").trim();
+    const from = fromAddress.includes("<") ? fromAddress : `${s.branding.storeName.replace(/["<>]/g, "")} <${fromAddress}>`;
     const { error } = await resend.emails.send({
-      from: `${s.branding.storeName.replace(/["<>]/g, "")} <${fromAddress}>`,
+      from,
       to: opts.to,
       subject: opts.subject,
       html,

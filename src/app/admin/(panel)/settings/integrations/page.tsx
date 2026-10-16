@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 export const metadata = { title: "Integrations" };
 
 type ServiceCard = {
-  id: "database" | "cloudinary" | "resend" | "telegram" | "webpush";
+  id: "database" | "storage" | "resend" | "telegram" | "webpush";
   name: string;
   what: string;
   configured: boolean;
@@ -31,6 +31,7 @@ export default async function IntegrationsPage() {
     dbOk = false;
   }
   const onVercel = !!process.env.VERCEL;
+  const storageProvider = integrations.cloudinary() ? "Cloudinary" : integrations.supabase() ? "Supabase Storage" : "";
   const services: ServiceCard[] = [
     {
       id: "database",
@@ -43,13 +44,13 @@ export default async function IntegrationsPage() {
       test: "Test connection",
     },
     {
-      id: "cloudinary",
-      name: "Cloudinary (image uploads)",
-      what: "Stores product photos, payment screenshots and 3D models in the cloud.",
-      configured: integrations.cloudinary(),
-      warning: !integrations.cloudinary() && onVercel ? "On Vercel, files saved without Cloudinary disappear after a while. Add Cloudinary keys." : undefined,
+      id: "storage",
+      name: "File storage (uploads)",
+      what: `Stores product photos, payment screenshots and 3D models in the cloud. ${storageProvider ? `Currently using ${storageProvider}.` : ""}`,
+      configured: !!storageProvider,
+      warning: !storageProvider && onVercel ? "On Vercel, files saved on the server disappear after a while. Add Supabase Storage (or Cloudinary) keys." : undefined,
       fallback: "Not set: uploads are saved to the uploads/ folder on this server.",
-      envs: ["CLOUDINARY_CLOUD_NAME", "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET"],
+      envs: ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"],
       test: "Upload a test image",
     },
     {

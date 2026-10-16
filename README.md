@@ -57,8 +57,8 @@ Secrets and service keys go in environment variables. Every variable is explaine
 
 | Service | Without it |
 |---|---|
-| PostgreSQL (`DATABASE_URL`) | Uses a local SQLite file |
-| Cloudinary | Uploads are saved to `uploads/` |
+| PostgreSQL (`DATABASE_URL`, plus `DIRECT_URL` for Supabase) | Uses a local SQLite file |
+| Supabase Storage (or Cloudinary) | Uploads are saved to `uploads/` |
 | Resend | Emails are printed in the terminal and kept in Admin → Integrations → Email log |
 | Telegram | Alerts are skipped and logged |
 | Web push keys | Generated automatically locally |

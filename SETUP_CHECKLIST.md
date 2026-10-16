@@ -2,21 +2,25 @@
 
 Work through this list from top to bottom. Each step takes 5–10 minutes and every service here has a free plan. Keep a note open to paste the values you collect.
 
-## 1. Database — Neon (required)
+## 1. Database — Supabase (required)
 
-1. Sign up at <https://neon.tech> and create a project (choose the region closest to your customers, e.g. Singapore or Frankfurt).
-2. On the dashboard, click **Connect** and copy the connection string. It starts with `postgresql://` and ends with `?sslmode=require`.
-3. Save it as **`DATABASE_URL`**.
+1. Sign up at <https://supabase.com> and create a project. Choose the region closest to your customers (e.g. Mumbai or Singapore) and a database password made of **letters and numbers only**.
+2. Click **Connect** (top bar) → **ORM** → **Prisma**. Copy the two lines it shows and replace `[YOUR-PASSWORD]` in both:
+   - **`DATABASE_URL`**: the pooled one (port **6543**). Make it end with `?pgbouncer=true&connection_limit=1`.
+   - **`DIRECT_URL`**: the session one (port **5432**). It's only used to create and update tables.
+
+   No ORM tab? Under **Direct → Connection string**, the **Transaction pooler** is `DATABASE_URL` and the **Session pooler** is `DIRECT_URL`. Don't use "Direct connection"; Vercel can't reach it.
 
 The code switches from the local database to PostgreSQL automatically. You don't need to edit anything.
 
-## 2. Images — Cloudinary (required on Vercel)
+## 2. File uploads — Supabase Storage (required on Vercel)
 
-Vercel deletes files saved to its disk, so product photos and payment screenshots must go to Cloudinary.
+Vercel deletes files saved to its disk, so product photos and payment screenshots must go to cloud storage. The same Supabase project handles this; no extra account is needed.
 
-1. Sign up at <https://cloudinary.com>.
-2. Open **Dashboard → API Keys**.
-3. Save **`CLOUDINARY_CLOUD_NAME`**, **`CLOUDINARY_API_KEY`** and **`CLOUDINARY_API_SECRET`**.
+1. In Supabase, open **Project Settings → Data API** and copy the **Project URL** (like `https://abcd.supabase.co`). Save it as **`SUPABASE_URL`**.
+2. Open **Project Settings → API Keys** and copy the **Secret key** (starts with `sb_secret_`), or the legacy **service_role** key. Save it as **`SUPABASE_SERVICE_ROLE_KEY`**. Keep it secret: it has full access to your project.
+
+The store creates two storage buckets on the first upload: `store` (public: product photos) and `store-private` (payment screenshots, shown to admins only). Cloudinary also works if you prefer it; see `.env.example`.
 
 ## 3. Login security (required)
 

@@ -32,13 +32,14 @@ export async function testIntegration(service: string): Promise<TestResult> {
       }
       break;
     }
-    case "cloudinary": {
-      if (!integrations.cloudinary()) {
-        result = { ok: false, message: "Cloudinary keys are not set, so uploads are saved on this server instead." };
+    case "storage": {
+      if (!integrations.cloudinary() && !integrations.supabase()) {
+        result = { ok: false, message: "No cloud storage keys are set, so uploads are saved on this server instead." };
         break;
       }
       const url = await storeUpload(new File([PNG], "test.png", { type: "image/png" }), { folder: "branding", kind: "image" });
-      result = url.url.includes("cloudinary") ? { ok: true, message: "Test image uploaded to Cloudinary." } : { ok: false, message: "Cloudinary upload failed - check the keys. See the log below." };
+      const where = url.url.includes("cloudinary") ? "Cloudinary" : url.url.includes(".supabase.co/storage") ? "Supabase Storage" : "";
+      result = where ? { ok: true, message: `Test image uploaded to ${where}.` } : { ok: false, message: "Upload to cloud storage failed - check the keys. See the log below." };
       break;
     }
     case "resend": {

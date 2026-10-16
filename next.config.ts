@@ -5,7 +5,10 @@ const nextConfig: NextConfig = {
   // prices from the database on every request so admin changes are instant.
   // See DECISIONS.md.
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
+    ],
     formats: ["image/avif", "image/webp"],
   },
   experimental: {

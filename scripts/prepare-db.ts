@@ -13,10 +13,15 @@ export function prepareSchema(): { provider: string; changed: boolean } {
   const provider = /^postgres(ql)?:\/\//.test(url) ? "postgresql" : "sqlite";
   const schemaPath = path.join(process.cwd(), "prisma", "schema.prisma");
   const schema = fs.readFileSync(schemaPath, "utf8");
-  const next = schema.replace(
+  let next = schema.replace(
     /(datasource db \{\s*provider\s*=\s*")(sqlite|postgresql)(")/,
     `$1${provider}$3`,
   );
+  // Poolers (Supabase, Neon "-pooler") can't run `prisma db push`, so Postgres
+  // may also set DIRECT_URL, a direct/session connection used for schema changes.
+  const wantDirect = provider === "postgresql" && !!process.env.DIRECT_URL;
+  next = next.replace(/\n\s*directUrl\s*=\s*env\("DIRECT_URL"\)/, "");
+  if (wantDirect) next = next.replace(/(\n\s*url\s*=\s*env\("DATABASE_URL"\))/, `$1\n  directUrl = env("DIRECT_URL")`);
   const changed = next !== schema;
   if (changed) fs.writeFileSync(schemaPath, next);
   return { provider, changed };
