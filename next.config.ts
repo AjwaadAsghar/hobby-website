@@ -17,7 +17,9 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev: false,
     turbopackFileSystemCacheForBuild: false,
   },
-  serverExternalPackages:["@prisma/client", "web-push", "exceljs", "sanitize-html"],
+  // sanitize-html is bundled on purpose: its htmlparser2 dependency is ESM-only and
+  // loading it as an external package crashes on Vercel (ERR_REQUIRE_ESM).
+  serverExternalPackages: ["@prisma/client", "web-push", "exceljs"],
   turbopack: {
     rules: {
       "*.css": {
