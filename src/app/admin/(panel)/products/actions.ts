@@ -13,6 +13,12 @@ import { productFormSchema } from "@/lib/validation/product";
 
 export type SaveResult = { ok?: boolean; id?: string; error?: string; fieldErrors?: Record<string, string> };
 
+/** Last meaningful line of an error (Prisma puts the actual reason at the end). Admin-only, so safe to show. */
+function lastLine(err: unknown): string {
+  const lines = String((err as Error)?.message ?? err).split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  return lines.pop() ?? "unknown error";
+}
+
 async function uniqueSlug(base: string, excludeId?: string) {
   const root = slugify(base) || "product";
   let slug = root;
@@ -39,7 +45,13 @@ export async function saveProduct(json: string): Promise<SaveResult> {
     return { error: "Please fix the highlighted fields.", fieldErrors };
   }
   const d = parsed.data;
-  const slug = await uniqueSlug(d.slug || d.title, d.id);
+  let slug: string;
+  try {
+    slug = await uniqueSlug(d.slug || d.title, d.id);
+  } catch (err) {
+    console.error("[saveProduct] slug", err);
+    return { error: `Could not save the product: ${lastLine(err)}` };
+  }
   const optionNames = d.optionNames.filter(Boolean);
   const variants = optionNames.length
     ? d.variants
@@ -102,7 +114,7 @@ export async function saveProduct(json: string): Promise<SaveResult> {
         data: { compatibleWith: { set: d.compatibleIds.filter((x) => x !== product.id).map((x) => ({ id: x })) } },
       });
       return product.id;
-    });
+    }, { maxWait: 10_000, timeout: 30_000 });
     revalidatePath("/admin/products");
     revalidatePath(`/product/${slug}`);
     return { ok: true, id };
@@ -111,7 +123,7 @@ export async function saveProduct(json: string): Promise<SaveResult> {
       return { error: "That SKU is already used by another product or variant. SKUs must be unique.", fieldErrors: { sku: "This SKU is already in use." } };
     }
     console.error("[saveProduct]", err);
-    return { error: "Could not save the product. Please try again." };
+    return { error: `Could not save the product: ${lastLine(err)}` };
   }
 }
 

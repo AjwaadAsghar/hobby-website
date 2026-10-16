@@ -90,18 +90,26 @@ export function ProductForm({
   function submit(e: React.FormEvent) {
     e.preventDefault();
     startSaving(async () => {
-      const res = await saveProduct(
-        JSON.stringify({
-          ...v,
-          categoryId: v.categoryId || null,
-          modelUrl: v.modelUrl || null,
-          compareAtPrice: v.compareAtPrice || null,
-          costPrice: v.costPrice === "" ? null : v.costPrice,
-          stock: v.stock || 0,
-          lowStockThreshold: v.lowStockThreshold || 0,
-          variants: v.variants.map((x) => ({ ...x, price: x.price === "" ? null : x.price, stock: x.stock || 0 })),
-        }),
-      );
+      let res: Awaited<ReturnType<typeof saveProduct>>;
+      try {
+        res = await saveProduct(
+          JSON.stringify({
+            ...v,
+            categoryId: v.categoryId || null,
+            modelUrl: v.modelUrl || null,
+            compareAtPrice: v.compareAtPrice || null,
+            costPrice: v.costPrice === "" ? null : v.costPrice,
+            stock: v.stock || 0,
+            lowStockThreshold: v.lowStockThreshold || 0,
+            variants: v.variants.map((x) => ({ ...x, price: x.price === "" ? null : x.price, stock: x.stock || 0 })),
+          }),
+        );
+      } catch (err) {
+        // Network drop, server timeout or a crash on the server: keep the form and say so.
+        console.error(err);
+        toast.error("Could not reach the server to save. Your changes are still here - please try again.");
+        return;
+      }
       if (res.ok && res.id) {
         setErrors({});
         toast.success("Product saved.");
